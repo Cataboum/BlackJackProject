@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # ============================================================================
 # = File containing all the constant variables
 # ============================================================================
@@ -55,10 +53,18 @@ class Decision(Enum):
     """
     Class with decisions regarding Hands
     """
-    stand = 0
-    hit = 1
-    double = 2
-    split = 3
+    stand = "STAND"
+    hit = "HIT"
+    double = "DOUBLE"
+    split = "SPLIT"
+
+
+class Moves(Enum):
+    """
+    Class with moves possibilities
+    """
+    up = 0
+    down = 1
 
 
 class PlayerHand:
