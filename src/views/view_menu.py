@@ -16,7 +16,7 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     screen = window
 
     # Load background image
-    bgd_tile = load_image("menu/bgd_menu.png")
+    bgd_tile = load_image("green_carpet.jpeg")
     background = pygame.Surface((menu_config["width"], menu_config["height"]))
     background.blit(bgd_tile, (0, 0))
 
@@ -88,8 +88,6 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
                 elif btn_quit.isClicked(pos):
                     btn_quit.execute()
                     state = cst.Game.quit
-
-
 
         # Update the scene
         dirty = all_sprites.draw(screen)

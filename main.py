@@ -17,6 +17,8 @@ from pygame.locals import (
 
 from src.common.constants import (
     Game,
+    CONFIG_GAME,
+    CONFIG_MENU,
     DIR_CONFIG,
     DIR_SRC,
     DIR_DATA,
@@ -55,8 +57,6 @@ class Main:
         """
 
         file_config = os.path.join(DIR_CONFIG, "ui.cfg.json")
-        with open(file_config, "r", encoding="utf-8") as f:
-            self.config = json.load(f)
 
     def initPygame(self):
         """
@@ -65,9 +65,13 @@ class Main:
 
         pygame.init()
         pygame.display.set_caption("Black Jack by Hackiflette")
-        self.window = pygame.display.set_mode((
-            self.config["window"]["width"],
-            self.config["window"]["height"],
+        self.game_window = pygame.display.set_mode((
+            CONFIG_GAME["window"]["width"],
+            CONFIG_GAME["window"]["height"],
+        ))
+        self.menu_window = pygame.display.set_mode((
+            CONFIG_MENU["window"]["width"],
+            CONFIG_MENU["window"]["height"],
         ))
 
     def initController(self):
@@ -75,25 +79,27 @@ class Main:
         Initialize the game_manager
         """
 
-        self.ctrl = Game_controller(self.window, self.config["window"])
+        self.ctrl = Game_controller(self.game_window, CONFIG_GAME)
 
     def mainloop(self):
         """
         The mainloop the launch the game
         """
 
-        state, param = view_menu.main(self.window, self.config["window"], self.config["menu_buttons"])
+        state, param = view_menu.main(
+            self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
 
         while state != Game.quit:
             if state == Game.menu:
                 self.ctrl.resetallhumans()
-                state, param = view_menu.main(self.window, self.config["window"], self.config["menu_buttons"])
+                state, param = view_menu.main(
+                    self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
             elif state == Game.play:
                 self.ctrl.game_launch()
                 state = self.gameLoop()
                 # state, param = view_game.main(self.window, self.config["window"])
             elif state == Game.option:
-                state, param = view_option.main(self.window, self.config["window"])
+                state, param = view_option.main(self.menu_window, CONFIG_MENU["window"])
             else:
                 state = 0
 

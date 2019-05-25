@@ -1,0 +1,30 @@
+{
+    "window": {
+        "width": 1200,
+        "height": 700
+    },
+    "card_areas": {
+        "extra_card_offset": {
+            "x": 15,
+            "y": 15
+        },
+        "dealer": {
+            "x": 600,
+            "y": 50
+        },
+        "player_one_hand": {
+            "x": 600,
+            "y": 50
+        },
+        "player_two_hands": {
+            "hand_1": {
+                "x": 400,
+                "y": 50
+            },
+            "hand_2": {
+                "x": 800,
+                "y": 50
+            }
+        }
+    }
+}

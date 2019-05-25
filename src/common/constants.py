@@ -18,9 +18,12 @@ with open(__tmp, "r", encoding="utf-8") as f:
 __tmp = "data/config/pictures.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
     CONFIG_PICTURES = json.load(f)
-__tmp = "data/config/ui.cfg.json"
+__tmp = "data/config/menu.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
-    CONFIG_UI = json.load(f)
+    CONFIG_MENU = json.load(f)
+__tmp = "data/config/game.cfg.json"
+with open(__tmp, "r", encoding="utf-8") as f:
+    CONFIG_GAME = json.load(f)
 
 # ============================================================================
 # = Directories path

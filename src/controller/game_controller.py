@@ -14,17 +14,16 @@ class Game_controller:
     """
     A controller for all the game
     """
-
-    def __init__(self, window, menu_config, ):
+    def __init__(self, window, view_config):
 
         print("Enter in controller")
         self.window = window
-        self.menu_config = menu_config
+        self.view_config = view_config
         self.humans_list = [Dealer()]
-        # self.view_game = View_game(window, menu_config)
+        # self.view_game = View_game(window, view_config)
 
     def game_launch(self):
-        self.view_game = View_game(self.window, self.menu_config)
+        self.view_game = View_game(self.window, self.view_config)
 
     def refresh(self):
         self.view_game.refresh()
@@ -55,7 +54,7 @@ class Game_controller:
         """
         if len(self.humans_list) > 2:
             for i in range(len(self.humans_list[:-1])):
-                if humans_list[i].uuid == player_uuid :
+                if self.humans_list[i].uuid == player_uuid :
                     self.humans_list = self.humans_list[:i] + self.humans_list[i+1:]
                     return True
         else:

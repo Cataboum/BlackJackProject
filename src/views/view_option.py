@@ -12,7 +12,7 @@ def main(window, menu_config):
     screen = window
 
     # Load background image
-    bgd_tile = load_image("menu/bgd_menu.png")
+    bgd_tile = load_image("green_carpet.jpeg")
     background = pygame.Surface((menu_config["width"], menu_config["height"]))
     background.blit(bgd_tile, (0, 0))
 
