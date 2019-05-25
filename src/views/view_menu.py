@@ -38,7 +38,7 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
                            'border_color': (255, 255, 255),
                            'background': (0, 170, 140)}
     btn_play = Button(pos=(menu_buttons['play_btn']['x'], menu_buttons['play_btn']['y']),
-                      width=200, height=50, text="Start (Enter)",
+                      width=200, height=50, text="Start (s)",
                       color=(255, 255, 255), border=2, border_color=(255, 255, 255),
                       background=(0, 170, 140))
     btn_options = Button(pos=(menu_buttons['option_btn']['x'], menu_buttons['option_btn']['y']),
@@ -48,9 +48,12 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
 
     btns_list = [btn_play, btn_options, btn_quit]
 
-    btn_play.set(command=lambda: print("Ok"))
-    btn_options.set(command=lambda: print("Ok"))
-    btn_quit.set(command=lambda: print("Ok"))
+    # btn_play.set(command=Game.play)
+    btn_play.set(value=Game.play)
+    btn_options.set(value=Game.option)
+    # btn_options.set(command=lambda: Game.option)
+    btn_quit.set(value=Game.quit)
+    # btn_quit.set(command=lambda: Game.quit)
 
     # Display on windows
     screen.blit(background, (0, 0))
@@ -105,6 +108,9 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
             if event.type == QUIT:
                 state = Game.quit
             elif event.type == KEYDOWN and event.key == K_RETURN:
+                # state = Game.play
+                state = btns_list[btn_index].value
+            elif event.type == KEYDOWN and event.key == K_s:
                 state = Game.play
             elif event.type == KEYDOWN and event.key == K_o:
                 state = Game.option
