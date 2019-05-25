@@ -36,12 +36,13 @@ class Button:
     def __init__(self, **kwargs):
 
         self.__validKwargs = {"pos", "width", "height", "text", "color", "background",
-                              "command", "state", "border", "border_color"}
+                              "command", "value", "state", "border", "border_color"}
         self.rect = pygame.Rect(0, 0, 0, 0)
         self.text = "Button"
         self.color = (0, 0, 0)
         self.background = None
         self.command = self.__emptyFunc
+        self.value = None
         self.state = "enabled"
         self.border = 0
         self.border_color = (0, 0, 0)
@@ -141,6 +142,9 @@ class Button:
         if "command" in kwargs:
             self.command = kwargs["command"]
             self.state = "enabled"
+
+        if "value" in kwargs:
+            self.value = kwargs["value"]
 
         if "state" in kwargs:
             self.state = kwargs["state"]
