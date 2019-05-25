@@ -12,7 +12,7 @@ from src.Button import Button
 def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     """ The main function of the view of menu"""
 
-    BTN_INDEX = 0
+    btn_index = 0
     # Init window
     screen = window
 
@@ -61,26 +61,30 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     for btn in btns_list:
         btn.display(window)
 
-    def move_btn_index(move, BTN_INDEX, btns_list):
+    def move_btn_index(move, btn_index, btns_list):
+        # Change btn_index
         if move == Moves.up:
-            BTN_INDEX -= 1
-            if BTN_INDEX == -1:
-                BTN_INDEX = len(btns_list)-1
+            btn_index -= 1
+            if btn_index == -1:
+                btn_index = len(btns_list)-1
         elif move == Moves.down:
-            BTN_INDEX = (BTN_INDEX+1)%len(btns_list)
-
+            btn_index = (btn_index+1)%len(btns_list)
+        
+        # Change button format according to index
         for i, btn in enumerate(btns_list):
-            if i == BTN_INDEX:
+            if i == btn_index:
                 btn.set(**selected_btn_format)
             else:
                 btn.set(**default_btn_format)
-
+        
+        # Update buttons display
         screen.blit(background, (0, 0))
         screen.blit(title_text, (80, 30))
         for btn in btns_list:
             btn.display(window)
         pygame.display.flip()
-        return BTN_INDEX
+        
+        return btn_index
 
 
     pygame.display.flip()
@@ -108,9 +112,9 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
                 state = Game.quit
 
             elif event.type == KEYDOWN and event.key == K_DOWN:
-                BTN_INDEX = move_btn_index(Moves.down, BTN_INDEX, btns_list)
+                btn_index = move_btn_index(Moves.down, btn_index, btns_list)
             elif event.type == KEYDOWN and event.key == K_UP:
-                BTN_INDEX = move_btn_index(Moves.up, BTN_INDEX, btns_list)
+                btn_index = move_btn_index(Moves.up, btn_index, btns_list)
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
