@@ -3,7 +3,7 @@
 import pygame
 from pygame.locals import *
 
-import src.common.constants as cst
+from src.common.constants import Game, Moves
 from src.common.func_pictures import load_image
 
 from src.Button import Button
@@ -12,6 +12,7 @@ from src.Button import Button
 def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     """ The main function of the view of menu"""
 
+    BTN_INDEX = 0
     # Init window
     screen = window
 
@@ -28,7 +29,14 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     # begin_text = core_font.render('Start (Enter)', 2, (255, 255, 255))
     # option_text = core_font.render('Options (o)', 2, (255, 255, 255))
     # quit_text = core_font.render('Quit (Esc)', 2, (255, 255, 255))
-
+    default_btn_format = {'color': (0, 0, 0),
+                          'border': 0,
+                          'border_color': (255, 255, 255),
+                          'background': None}
+    selected_btn_format = {'color': (255, 255, 255),
+                           'border': 2,
+                           'border_color': (255, 255, 255),
+                           'background': (0, 170, 140)}
     btn_play = Button(pos=(menu_buttons['play_btn']['x'], menu_buttons['play_btn']['y']),
                       width=200, height=50, text="Start (Enter)",
                       color=(255, 255, 255), border=2, border_color=(255, 255, 255),
@@ -37,6 +45,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
                          width=200, height=50, text="Options (o)")
     btn_quit = Button(pos=(menu_buttons['quit_btn']['x'], menu_buttons['quit_btn']['y']),
                       width=200, height=50, text="Quit (Esc)")
+
+    btns_list = [btn_play, btn_options, btn_quit]
 
     btn_play.set(command=lambda: print("Ok"))
     btn_options.set(command=lambda: print("Ok"))
@@ -48,9 +58,30 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     # screen.blit(begin_text, (menu_buttons["play_btn"]["x"], menu_buttons["play_btn"]["y"]))
     # screen.blit(option_text, (menu_buttons["option_btn"]["x"], menu_buttons["option_btn"]["y"]))
     # screen.blit(quit_text, (menu_buttons["quit_btn"]["x"], menu_buttons["quit_btn"]["y"]))
-    btn_play.display(window)
-    btn_options.display(window)
-    btn_quit.display(window)
+    for btn in btns_list:
+        btn.display(window)
+
+    def move_btn_index(move, BTN_INDEX, btns_list):
+        if move == Moves.up:
+            BTN_INDEX -= 1
+            if BTN_INDEX == -1:
+                BTN_INDEX = len(btns_list)-1
+        elif move == Moves.down:
+            BTN_INDEX = (BTN_INDEX+1)%len(btns_list)
+
+        for i, btn in enumerate(btns_list):
+            if i == BTN_INDEX:
+                btn.set(**selected_btn_format)
+            else:
+                btn.set(**default_btn_format)
+
+        screen.blit(background, (0, 0))
+        screen.blit(title_text, (80, 30))
+        for btn in btns_list:
+            btn.display(window)
+        pygame.display.flip()
+        return BTN_INDEX
+
 
     pygame.display.flip()
 
@@ -58,8 +89,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     all_sprites = pygame.sprite.RenderUpdates()
     clock = pygame.time.Clock()
 
-    state = cst.Game.menu
-    while state == cst.Game.menu:
+    state = Game.menu
+    while state == Game.menu:
 
         # Clear all the sprites
         all_sprites.clear(screen, bgd_tile)
@@ -68,26 +99,31 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         # Check for events
         for event in pygame.event.get():
             if event.type == QUIT:
-                state = cst.Game.quit
+                state = Game.quit
             elif event.type == KEYDOWN and event.key == K_RETURN:
-                state = cst.Game.play
+                state = Game.play
             elif event.type == KEYDOWN and event.key == K_o:
-                state = cst.Game.option
+                state = Game.option
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                state = cst.Game.quit
+                state = Game.quit
+
+            elif event.type == KEYDOWN and event.key == K_DOWN:
+                BTN_INDEX = move_btn_index(Moves.down, BTN_INDEX, btns_list)
+            elif event.type == KEYDOWN and event.key == K_UP:
+                BTN_INDEX = move_btn_index(Moves.up, BTN_INDEX, btns_list)
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 if btn_play.isClicked(pos):
                     btn_play.execute()
 
-                    state = cst.Game.play
+                    state = Game.play
                 elif btn_options.isClicked(pos):
                     btn_options.execute()
-                    state = cst.Game.option
+                    state = Game.option
                 elif btn_quit.isClicked(pos):
                     btn_quit.execute()
-                    state = cst.Game.quit
+                    state = Game.quit
 
 
 
