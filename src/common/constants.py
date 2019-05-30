@@ -6,8 +6,6 @@ import os
 import json
 from enum import Enum
 
-from src.CardsAPI.Hand import Hand
-
 # ============================================================================
 # = Configuration parameters
 # ============================================================================
@@ -18,12 +16,9 @@ with open(__tmp, "r", encoding="utf-8") as f:
 __tmp = "data/config/pictures.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
     CONFIG_PICTURES = json.load(f)
-__tmp = "data/config/menu.cfg.json"
+__tmp = "data/config/ui.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
-    CONFIG_MENU = json.load(f)
-__tmp = "data/config/game.cfg.json"
-with open(__tmp, "r", encoding="utf-8") as f:
-    CONFIG_GAME = json.load(f)
+    CONFIG_UI = json.load(f)
 
 # ============================================================================
 # = Directories path
@@ -66,30 +61,15 @@ class Moves(Enum):
     up = 0
     down = 1
 
-
-class PlayerHand:
+class PlayerHand(Enum):
     """
     Hand list index for player hand
     """
-
-    def __init__(self, hand: Hand = None,
-                 hand_bet: int = 0, is_lock: bool = False):
-        self.hand: Hand = hand or Hand()
-        self.hand_bet: int = hand_bet
-        self.is_lock: bool = is_lock
-
-    def __repr__(self):
-        return (f"PlayerHand object(hand = {self.hand}, "
-                f"hand_bet = {self.hand_bet}, "
-                f"is_lock = {self.is_lock})")
-
-    def __str__(self):
-        return (f"{['', 'Locked'][self.is_lock]} "
-                f"{self.hand} with bet: {self.hand_bet}")
-
+    Hand = 0
+    HandBet = 1
+    IsLock = 2
 # ============================================================================
 # = Clear temporary variables
 # ============================================================================
-
 
 del __tmp
