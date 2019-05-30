@@ -1,4 +1,4 @@
-from src.CardsAPI import Deck,Card
+from src.CardsAPI import Deck, Card
 
 
 def test_init_deck():
@@ -22,19 +22,6 @@ def test_deal_deck():
     card = deck.getCard()
     assert type(card) == Card.Card
     assert deck.top_card_index == 1
-
-
-def test_red_card_deck():
-
-    deck = Deck.Deck()
-    last_card = deck.cards[-1]
-    deck.getCard()
-    assert last_card == deck.cards[-1]
-
-    for i in range(int(((3 / 4) * 312) + 35)):
-        deck.getCard()
-
-    assert deck.cards[-1] != last_card
 
 
 def test_shuffle_deck():
