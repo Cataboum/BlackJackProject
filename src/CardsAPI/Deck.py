@@ -22,7 +22,7 @@ class Deck:
         # index of the red card, when the dealer finds this card, he shuffles
         # the deck. Usually placed around 3/4 of the deck
         # self.needs_shuffling is set to True when this index is reached
-        self.red_card_index = self.compute_red_card_index(len(self.cards))
+        self.red_card_index = self.computeRedCardIndex(len(self.cards))
 
     def shuffle(self):
         # shuffle deck
@@ -30,7 +30,7 @@ class Deck:
         # reset counter
         self.top_card_index = 0
         # recalculate red card index, not really necessary but more realistic
-        self.red_card_index = self.compute_red_card_index(len(self.cards))
+        self.red_card_index = self.computeRedCardIndex(len(self.cards))
         # reset shuffling flag to False
         self.needs_shuffling = False
 
@@ -43,7 +43,7 @@ class Deck:
         return Card(*self.cards[self.top_card_index])
 
     @staticmethod
-    def compute_red_card_index(deck_length):
+    def computeRedCardIndex(deck_length):
         """
         Utility function to choose a random index at 3/4th of the deck's
         length += 30
