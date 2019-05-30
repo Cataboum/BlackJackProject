@@ -58,7 +58,7 @@ class Moves(Enum):
     """
     Class with moves possibilities
     """
-    up = 0
+    up = -1
     down = 1
 
 class PlayerHand(Enum):
