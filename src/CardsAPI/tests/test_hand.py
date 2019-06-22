@@ -18,11 +18,20 @@ def test_add_card():
 
     hand = Hand.Hand()
     card = Card.Card(2)
-    hand += card
+    hand = hand + card
     card = Card.Card(5)
-    hand += card
+    hand = hand + card
     assert len(hand.card_list) == 2
     assert hand.value == 7
+
+
+def test_iadd_card():
+
+    hand = Hand.Hand([Card.Card(5)])
+    hand_list = [hand]
+    hand += Card.Card(2)
+    assert len(hand_list[0].card_list) == 2
+    assert hand_list[0].value == 7
 
 
 def test_comparison_hand():

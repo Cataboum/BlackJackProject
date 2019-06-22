@@ -157,7 +157,7 @@ class Hand(object):
         """
         if not isinstance(card, Card):
             return NotImplemented
-        self.card_list += card
+        self.card_list += [card]
         return self
 
     def __repr__(self) -> str:
