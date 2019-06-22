@@ -117,9 +117,10 @@ class Hand(object):
 
     def __add__(self, card: Card) -> 'Hand':
         """
-        Adds a card to the Hand, using "hand = hand + card" or "hand += card"
-        :param card: a Card object to append to the Hand's card_list
-        :return: The Hand itself
+        Creates a new hand from self with the added card using:
+        "hand = hand + card"
+        :param card: a Card object to append to the new Hand's card_list
+        :return: A new Hand with the
         """
         if not isinstance(card, Card):
             return NotImplemented
@@ -127,6 +128,17 @@ class Hand(object):
         return Hand(card_list=new_card_list,
                     is_dealer_hand=self.is_dealer_hand,
                     isSplit=self.is_split)
+
+    def __iadd__(self, card):
+        """
+        Adds a card to the Hand, using "hand += card"
+        :param card: a Card object to append to the Hand's card_list
+        :return: The Hand itself
+        """
+        if not isinstance(card, Card):
+            return NotImplemented
+        self.card_list += card
+        return self
 
     def __repr__(self) -> str:
         return (f"Hand(card_list={self.card_list},"
