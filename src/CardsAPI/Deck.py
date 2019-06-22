@@ -10,8 +10,9 @@ class Deck:
         # should be checked at the end of every turn by the controller
         self.needs_shuffling = False
 
-        self.cards = list(
-            itertools.product(card_to_value_dict.keys(), colors)) * 6
+        self.cards = (
+            list(itertools.product(card_to_value_dict.keys(), colors)) * 6
+        )
 
         if SHUFFLE:
             self.shuffle()
