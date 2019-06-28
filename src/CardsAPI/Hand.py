@@ -4,7 +4,7 @@ from src.CardsAPI.Card import Card
 from src.CardsAPI.Exceptions import CardsAPIError
 
 
-class Hand(object):
+class Hand:
     def __init__(
         self,
         card_list: List[Card] = None,
@@ -43,7 +43,7 @@ class Hand(object):
         else:
             return False
 
-    def checkSplitIsPossible(self):
+    def checkSplitIsPossible(self) -> bool:
         """
         Check if the card are the same
         :return: True is split can be done False otherwise
@@ -56,7 +56,7 @@ class Hand(object):
             return True
         return False
 
-    def split(self) -> Tuple["Hand", "Hand"]:
+    def split(self) -> Tuple['Hand', 'Hand']:
         """
         Performs a split action. Returns two instances of Hand.
         The methods checks for number of cards in the original Hand (which
@@ -78,7 +78,7 @@ class Hand(object):
     dealer or not
     """
 
-    def __gt__(self, other: "Hand") -> bool:
+    def __gt__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         if self.is_black_jack and not other.is_black_jack:
@@ -92,12 +92,12 @@ class Hand(object):
         else:
             return False
 
-    def __lt__(self, other: "Hand") -> bool:
+    def __lt__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         return not self.__gt__(other) and not self.__eq__(other)
 
-    def __eq__(self, other: "Hand") -> bool:
+    def __eq__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         if self.is_black_jack and other.is_black_jack:
@@ -118,22 +118,22 @@ class Hand(object):
         else:
             return False
 
-    def __ge__(self, other: "Hand") -> bool:
+    def __ge__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         return not self.__lt__(other)
 
-    def __le__(self, other: "Hand") -> bool:
+    def __le__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         return not self.__gt__(other)
 
-    def __ne__(self, other: "Hand") -> bool:
+    def __ne__(self, other: 'Hand') -> bool:
         if not isinstance(other, Hand):
             return NotImplemented
         return not self.__eq__(other)
 
-    def __add__(self, card: Card) -> "Hand":
+    def __add__(self, card: Card) -> 'Hand':
         """
         Creates a new hand from self with the added card using:
         "hand = hand + card"
@@ -149,7 +149,7 @@ class Hand(object):
             isSplit=self.is_split,
         )
 
-    def __iadd__(self, card):
+    def __iadd__(self, card) -> 'Hand':
         """
         Adds a card to the Hand, using "hand += card"
         :param card: a Card object to append to the Hand's card_list

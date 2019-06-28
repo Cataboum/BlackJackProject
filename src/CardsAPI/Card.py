@@ -25,7 +25,7 @@ value_to_card_dict = {key: value for (value, key) in card_names_and_values}
 colors = {"HEARTS", "SPADES", "CLUBS", "DIAMONDS"}
 
 
-class Card(object):
+class Card:
     def __init__(self, value: Union[int, str], color: str = "hearts"):
         self._value = None
         self._color = None
@@ -74,20 +74,20 @@ class Card(object):
         return self._value
 
     @value.setter
-    def value(self, arg):
+    def value(self, arg: Union[str, int]):
         if isinstance(arg, str):
             self.name = arg.upper()
         elif isinstance(arg, int):
             self.name = value_to_card_dict[arg]
         self._value = card_to_value_dict[self.name]
 
-    def __radd__(self, other: Union["Card", int]) -> int:
+    def __radd__(self, other: Union['Card', int]) -> int:
         if self.name == "ACE":
             if self._value + other <= 11:
                 return self._value + other + 10
         return self._value + other
 
-    def __add__(self, other: Union["Card", int]) -> int:
+    def __add__(self, other: Union['Card', int]) -> int:
         if self.name == "ACE":
             if self._value + other <= 11:
                 return self._value + other + 10

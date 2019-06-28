@@ -44,7 +44,7 @@ class Deck:
         return Card(*self.cards[self.top_card_index])
 
     @staticmethod
-    def computeRedCardIndex(deck_length):
+    def computeRedCardIndex(deck_length: int) -> int:
         """
         Utility function to choose a random index at 3/4th of the deck's
         length += 30
