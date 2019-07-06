@@ -17,15 +17,15 @@ from pygame.locals import (
 
 from src.common.constants import (
     Game,
-    CONFIG_GAME,
     CONFIG_MENU,
     DIR_CONFIG,
     DIR_SRC,
     DIR_DATA,
     DIR_PICTURES,
 )
+from src.common.game_view_config import game_view_config
 from src.views import view_menu, view_game, view_option
-from src.controller.game_controller import Game_controller
+from src.controller.game_controller import GameController
 from src.humans.Player import Player
 # ============================================================================
 # =
@@ -66,8 +66,8 @@ class Main:
         pygame.init()
         pygame.display.set_caption("Black Jack by Hackiflette")
         self.game_window = pygame.display.set_mode((
-            CONFIG_GAME["window"]["width"],
-            CONFIG_GAME["window"]["height"],
+            game_view_config.window.width,
+            game_view_config.window.height,
         ))
         self.menu_window = pygame.display.set_mode((
             CONFIG_MENU["window"]["width"],
@@ -79,7 +79,7 @@ class Main:
         Initialize the game_manager
         """
 
-        self.ctrl = Game_controller(self.game_window, CONFIG_GAME)
+        self.ctrl = GameController(self.game_window)
 
     def mainloop(self):
         """
@@ -91,11 +91,11 @@ class Main:
 
         while state != Game.quit:
             if state == Game.menu:
-                self.ctrl.resetallhumans()
+                self.ctrl.resetAllHumans()
                 state, param = view_menu.main(
                     self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
             elif state == Game.play:
-                self.ctrl.game_launch()
+                self.ctrl.gameLaunch()
                 state = self.gameLoop()
                 # state, param = view_game.main(self.window, self.config["window"])
             elif state == Game.option:
@@ -118,7 +118,7 @@ class Main:
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     state = Game.menu
                 elif event.type:
-                    keep_playing = self.ctrl.playoneround()
+                    keep_playing = self.ctrl.playOneRound()
                     if keep_playing == False :
                         #Player want to quit
                         state = Game.menu
