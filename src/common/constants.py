@@ -16,15 +16,12 @@ from src.common.config import ConfigPath
 # ============================================================================
 
 ConfigPath.initialize("data/config/path.cfg.json")
-__tmp = "data/config/pictures.cfg.json"
-with open(__tmp, "r", encoding="utf-8") as f:
-    CONFIG_PICTURES = json.load(f)
 __tmp = "data/config/menu.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
     CONFIG_MENU = json.load(f)
-__tmp = "data/config/game.cfg.json"
+__tmp = "data/config/game_view.cfg.json"
 with open(__tmp, "r", encoding="utf-8") as f:
-    CONFIG_GAME = json.load(f)
+    CONFIG_GAME_VIEW = json.load(f)
 
 # ============================================================================
 # = Directories path

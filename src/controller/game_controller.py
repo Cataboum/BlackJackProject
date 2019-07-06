@@ -1,6 +1,5 @@
-
-import src.common.constants as cst
-from src.views.view_game import View_game
+from src.common.utils import Singleton
+from src.views.view_game import ViewGame
 from src.humans.Dealer import Dealer
 from src.humans.Player import Player
 
@@ -10,42 +9,44 @@ from pygame.locals import (
     KEYDOWN,
     K_ESCAPE,
 )
-class Game_controller:
+
+
+class GameController(metaclass=Singleton):
     """
     A controller for all the game
     """
-    def __init__(self, window, view_config):
+    def __init__(self, window):
 
         print("Enter in controller")
         self.window = window
-        self.view_config = view_config
         self.humans_list = [Dealer()]
+        self.view_game = None
         # self.view_game = View_game(window, view_config)
 
-    def game_launch(self):
-        self.view_game = View_game(self.window, self.view_config)
+    def gameLaunch(self):
+        self.view_game = ViewGame(self.window)
 
     def refresh(self):
         self.view_game.refresh()
 
-    def addhuman(self,human) -> bool:
+    def addHuman(self, human) -> bool:
         """
         Adding one player into the list of humans to handle at each round
 
         :param human: Player to add
         :type arg1: Player
         """
-        if isinstance(human,Player):    
+        if isinstance(human, Player):
             if len(self.humans_list) > 1: 
                 self.humans_list = self.humans_list[:-1] + [human] + self.humans_list[:-1]
-            else :
+            else:
                 self.humans_list = [human] + self.humans_list
             return True
         else:
             # Given human isn't a player
             return False
 
-    def removeplayer(self, player_uuid) -> bool:
+    def removePlayer(self, player_uuid) -> bool:
         """
         Removing one player
 
@@ -63,18 +64,18 @@ class Game_controller:
         # Id not found
         return False
 
-    def resetallhumans(self):
-        """Reseting all humans : no more player and new dealer"""
+    def resetAllHumans(self):
+        """Resetting all humans : no more player and new dealer"""
         self.humans_list = [Dealer()]
 
-    def playoneround(self):
-        for human in self.humans_list :
-            print(human.name+ " is playing.")
-            #Get list of possible actions
-            #Manage interfaces
-            #Let human choose
-            state =True
-            while state == True:
+    def playOneRound(self):
+        for human in self.humans_list:
+            print(human.name + " is playing.")
+            # Get list of possible actions
+            # Manage interfaces
+            # Let human choose
+            state = True
+            while state:
                 for event in pygame.event.get():
                     if event.type == QUIT:
                         return False

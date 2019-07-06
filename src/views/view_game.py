@@ -1,32 +1,113 @@
-import pygame
-import src.common.constants as cst
-from src.common.func_pictures import load_image, convert_card_to_picture
-from src.CardsAPI.Card import Card
-from src.Button import Button
 from collections import defaultdict
+from typing import List
+
+import pygame
+
+from src.Button import Button
+from src.CardsAPI.Card import Card
+from src.common.func_pictures import load_image, convert_card_to_picture
+from src.common.game_view_config import game_view_config, Coordinates
+from src.common.utils import Signal, SurfaceWithPosition
 
 
-class View_game:
+class CardAreaOrganizer:
+    dealer_card_area_config = game_view_config.card_areas.dealer
+    player_card_area_config = game_view_config.card_areas.player
+    extra_card_offset = game_view_config.card_areas.extra_card_offset
+    card_width = game_view_config.cards.width
+    card_height = game_view_config.cards.height
+    window_width = game_view_config.window.width
+    window_height = game_view_config.window.height
 
-    def __init__(self, window, view_config):
+    def __init__(self):
+        self.areas_updated = Signal()
+        self.dealer_area: List[SurfaceWithPosition] = []
+        self.player_areas: List[List[SurfaceWithPosition]] = [[]]
 
+    def addCard(self, card, human_type, area_id=None):
+        card_tile = self.createCardTile(card)
+        if human_type == "dealer":
+            self.addDealerCard(card_tile)
+        elif human_type == "player":
+            self.addPlayerCard(card_tile, area_id)
+        else:
+            raise ValueError(
+                f"Unknown human type {human_type!r}, should be either "
+                f"\"dealer\" or \"player\""
+            )
+        self.areas_updated.emit()
+
+    def addDealerCard(self, card_tile):
+        x_offset = self.extra_card_offset.x * len(self.dealer_area)
+        y_offset = self.extra_card_offset.y * len(self.dealer_area)
+
+        x_pos = self.dealer_card_area_config.x + x_offset
+        y_pos = self.dealer_card_area_config.y + y_offset
+
+        position = Coordinates(x=x_pos, y=y_pos)
+
+        self.dealer_area.append(SurfaceWithPosition(card_tile, position))
+
+    def addPlayerCard(self, card_tile, area_id):
+        x_offset = self.extra_card_offset.x * len(self.player_areas[area_id])
+        y_offset = self.extra_card_offset.y * len(self.player_areas[area_id])
+
+        position = self.computePlayerAreaPosition(area_id, x_offset, y_offset)
+        self.player_areas[area_id].append(
+            SurfaceWithPosition(card_tile, position)
+        )
+
+    def computePlayerAreaPosition(self, area_id, x_offset, y_offset):
+        num_areas = len(self.player_areas)
+        player_area_width = (
+            self.player_card_area_config.width
+        )
+
+        x_pos = round(
+            self.player_card_area_config.x +
+            player_area_width / (1 + num_areas)
+        )
+        y_pos = self.player_card_area_config.y
+
+        return Coordinates(x_pos, y_pos)
+
+    @classmethod
+    def createCardTile(cls, card):
+        card_image = load_image(convert_card_to_picture(card))
+        card_tile = pygame.transform.scale(
+            card_image,
+            (cls.card_width,
+             cls.card_height)
+        )
+        return card_tile
+
+
+class ViewGame:
+    def __init__(self, window):
         self.window = window
-        self.view_config = view_config
         self.background = None  # init in init_window
-        self.area_counts = defaultdict(int)
+        self._area_counts = defaultdict(int)
+        self.card_area_organizer = CardAreaOrganizer()
+
+        self.organizers = (
+            self.card_area_organizer,
+        )
 
         self.init_window()
+
+    def subscribe_to_organizers(self):
+        self.card_area_organizer.areas_updated.attach(self.refresh)
 
     def init_window(self):
         # Init the window with background
         bgd_tile = load_image("green_carpet.jpeg")
         bgd_tile = pygame.transform.scale(
             bgd_tile,
-            (self.view_config["window"]["width"],
-             self.view_config["window"]["height"])
+            (game_view_config.window.width,
+             game_view_config.window.height)
         )
-        self.background = pygame.Surface((self.view_config["window"]["width"],
-                                          self.view_config["window"]["height"]))
+        self.background = pygame.Surface((game_view_config.window.width,
+                                          game_view_config.window.height))
         self.background.blit(bgd_tile, (0, 0))
 
         # Test the display of cards on the window
@@ -42,7 +123,7 @@ class View_game:
         pygame.display.flip()
 
         # Init sprites
-        all_sprites = pygame.sprite.RenderUpdates()
+        all_sprites = pygame.sprite.Group()
 
         # Update the scene
         dirty = all_sprites.draw(self.window)
@@ -50,28 +131,29 @@ class View_game:
 
     def init_game_btns(self):
         # Display game buttons area
-        cfg_btns = self.view_config['game_buttons']
-        pygame.draw.rect(self.window, cfg_btns['color'],
-                         (cfg_btns['x'], cfg_btns['y'],
-                          cfg_btns['width'], cfg_btns['height']))
+        cfg_btns = game_view_config.game_buttons
+        pygame.draw.rect(self.window, cfg_btns.color,
+                         (cfg_btns.x, cfg_btns.y,
+                          cfg_btns.width, cfg_btns.height))
 
         self.quit_btn = Button(pos=(1100, 610),
-                          width=80,
-                          height=80,
-                          text='Quit',
-                          background=(180, 180, 180))
+                               width=80,
+                               height=80,
+                               text='Quit',
+                               background=(180, 180, 180))
         self.quit_btn.display(self.window)
 
     def add_card(self, card, area_name):
-        card_area_config = self.view_config["card_areas"]
-        area = card_area_config[area_name]
+        card_area_config = game_view_config.card_areas
+        area = getattr(card_area_config, area_name)
 
-        offset = {k: v * self.area_counts[area_name] + 1
-                  for k, v in card_area_config["extra_card_offset"].items()}
+        n_cards = self._area_counts[area_name]
 
-        pos = (area["x"] + offset["x"], area["y"] + offset["y"])
+        offset = card_area_config.extra_card_offset
+
+        pos = (area.x + n_cards * offset.x, area.y + n_cards * offset.y)
         self._add_card(card, pos)
-        self.area_counts[area_name] += 1
+        self._area_counts[area_name] += 1
 
     def _add_card(self, card, pos):
         """
@@ -80,10 +162,15 @@ class View_game:
         card_tile = load_image(convert_card_to_picture(card))
         card_tile = pygame.transform.scale(
             card_tile,
-            (cst.CONFIG_PICTURES['cards']['size']['width'],
-             cst.CONFIG_PICTURES['cards']['size']['height'])
+            (game_view_config.cards.width,
+             game_view_config.cards.height)
         )
         self.background.blit(card_tile, pos)
 
     def refresh(self):
-        ...
+        # Init sprites
+        sprite_group = pygame.sprite.Group()
+
+        # Update the scene
+        dirty = all_sprites.draw(self.window)
+        pygame.display.update(dirty)

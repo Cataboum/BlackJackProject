@@ -46,4 +46,4 @@ def test_add_ace():
     card_2 = Card.Card(9)
     card_3 = Card.Card("ACE", "heaRts")
     assert card_1 + card_2 + card_3 == 20
-    #assert card_3 + card_2 + card_1 == 20
+    # assert card_3 + card_2 + card_1 == 20
