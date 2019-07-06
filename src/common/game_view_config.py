@@ -26,6 +26,10 @@ class Coordinates:
     x: Optional[int] = field(default=None)
     y: Optional[int] = field(default=None)
 
+    @property
+    def as_tuple(self):
+        return self.x, self.y
+
 
 class CoordinatesSchema(Schema):
     x = fields.Integer()

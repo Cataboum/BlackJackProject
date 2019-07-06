@@ -20,14 +20,12 @@ def convert_card_to_picture(card):
     """
     Return the picture name of a Card object
     """
-
-    if card.value != 10:
+    if card.value == 1:
+        value_name = "ACE"
+    elif card.value != 10 or card.name == "TEN":
         value_name = str(card.value)
     else:
-        if card.name == 'TEN':
-            value_name = str(card.value)
-        else:
-            value_name = card.name.lower()
+        value_name = card.name.lower()
     color = card.color.lower()
 
     card_picture_name = "%s_of_%s.png" % (value_name, color)

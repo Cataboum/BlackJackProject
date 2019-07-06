@@ -29,6 +29,8 @@ class CardAreaOrganizer:
         if human_type == "dealer":
             self.addDealerCard(card_tile)
         elif human_type == "player":
+            if area_id is None:
+                raise ValueError("Missing area_id for adding a player card")
             self.addPlayerCard(card_tile, area_id)
         else:
             raise ValueError(
@@ -93,10 +95,13 @@ class ViewGame:
             self.card_area_organizer,
         )
 
+        self.subscribe_to_organizers()
+
         self.init_window()
 
     def subscribe_to_organizers(self):
-        self.card_area_organizer.areas_updated.attach(self.refresh)
+        for organizer in self.organizers:
+            organizer.areas_updated.attach(self.refresh)
 
     def init_window(self):
         # Init the window with background
@@ -110,10 +115,6 @@ class ViewGame:
                                           game_view_config.window.height))
         self.background.blit(bgd_tile, (0, 0))
 
-        # Test the display of cards on the window
-        self.add_card(Card('King'), "dealer")
-        self.add_card(Card('Queen'), "dealer")
-
         # Display on windows
         self.window.blit(self.background, (0, 0))
 
@@ -123,11 +124,15 @@ class ViewGame:
         pygame.display.flip()
 
         # Init sprites
-        all_sprites = pygame.sprite.Group()
+        # all_sprites = pygame.sprite.Group()
+        #
+        # # Update the scene
+        # dirty = all_sprites.draw(self.window)
+        # pygame.display.update(dirty)
+        self.card_area_organizer.addCard(Card("KING"), "dealer")
+        self.card_area_organizer.addCard(Card("QUEEN"), "dealer")
 
-        # Update the scene
-        dirty = all_sprites.draw(self.window)
-        pygame.display.update(dirty)
+        self.card_area_organizer.addCard(Card("ACE", "SPADES"), "player", 0)
 
     def init_game_btns(self):
         # Display game buttons area
@@ -168,9 +173,21 @@ class ViewGame:
         self.background.blit(card_tile, pos)
 
     def refresh(self):
+        print("Updating View...")
         # Init sprites
         sprite_group = pygame.sprite.Group()
 
+        self.window.blit(self.background, (0, 0))
+        self.init_game_btns()
+
+        for el in self.card_area_organizer.dealer_area:
+            self.window.blit(el.surface, el.position.as_tuple)
+        for area in self.card_area_organizer.player_areas:
+            for el in area:
+                self.window.blit(el.surface, el.position.as_tuple)
+
         # Update the scene
-        dirty = all_sprites.draw(self.window)
-        pygame.display.update(dirty)
+        scene = sprite_group.draw(self.window)
+        pygame.display.flip()
+
+        print("Updating View...Done!")
