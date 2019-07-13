@@ -1,7 +1,9 @@
 from src.CardsAPI.Card import Card
 from src.common.game_view_config import game_view_config
 from src.views.card_area_organizer import CardAreaOrganizer
-import pygame
+
+# override method so we don't have to initialize a pygame window
+CardAreaOrganizer._create_card_tile = lambda _, __: None
 
 
 class SignalTriggerCounter:
@@ -16,8 +18,6 @@ def test_dealer_cards():
     card_2 = Card(2)
     dealer_card_area_config = game_view_config.card_areas.dealer
     extra_card_offset = game_view_config.card_areas.extra_card_offset
-    pygame.init()
-    pygame.display.set_mode((1, 1))
 
     signal_triggered = SignalTriggerCounter()
 
@@ -60,8 +60,6 @@ def test_player_cards_single_hand():
     card_2 = Card(2)
     player_card_area_config = game_view_config.card_areas.player
     extra_card_offset = game_view_config.card_areas.extra_card_offset
-    pygame.init()
-    pygame.display.set_mode((1, 1))
 
     signal_triggered = SignalTriggerCounter()
 
@@ -107,8 +105,6 @@ def test_player_cards_multi_hand():
     card_1 = Card(1)
     card_2 = Card(2)
     player_card_area_config = game_view_config.card_areas.player
-    pygame.init()
-    pygame.display.set_mode((1, 1))
 
     signal_triggered = SignalTriggerCounter()
 
@@ -145,8 +141,6 @@ def test_player_cards_split():
     card_2 = Card("KING")
     card_3 = Card(1)
     player_card_area_config = game_view_config.card_areas.player
-    pygame.init()
-    pygame.display.set_mode((1, 1))
 
     signal_triggered = SignalTriggerCounter()
 
@@ -184,8 +178,6 @@ def test_player_cards_split():
 def test_clear_areas():
     card_1 = Card(1)
     card_2 = Card(2)
-    pygame.init()
-    pygame.display.set_mode((1, 1))
 
     signal_triggered = SignalTriggerCounter()
 
