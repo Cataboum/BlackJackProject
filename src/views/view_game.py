@@ -34,12 +34,11 @@ class ViewGame:
         # Init the window with background
         bgd_tile = load_image("green_carpet.jpeg")
         bgd_tile = pygame.transform.scale(
-            bgd_tile,
-            (game_view_config.window.width,
-             game_view_config.window.height)
+            bgd_tile, (game_view_config.window.width, game_view_config.window.height)
         )
-        self.background = pygame.Surface((game_view_config.window.width,
-                                          game_view_config.window.height))
+        self.background = pygame.Surface(
+            (game_view_config.window.width, game_view_config.window.height)
+        )
         self.background.blit(bgd_tile, (0, 0))
 
         # Display on windows
@@ -64,15 +63,19 @@ class ViewGame:
     def init_game_btns(self):
         # Display game buttons area
         cfg_btns = game_view_config.game_buttons
-        pygame.draw.rect(self.window, cfg_btns.color,
-                         (cfg_btns.x, cfg_btns.y,
-                          cfg_btns.width, cfg_btns.height))
+        pygame.draw.rect(
+            self.window,
+            cfg_btns.color,
+            (cfg_btns.x, cfg_btns.y, cfg_btns.width, cfg_btns.height),
+        )
 
-        self.quit_btn = Button(pos=(1100, 610),
-                               width=80,
-                               height=80,
-                               text='Quit',
-                               background=(180, 180, 180))
+        self.quit_btn = Button(
+            pos=(1100, 610),
+            width=80,
+            height=80,
+            text="Quit",
+            background=(180, 180, 180),
+        )
         self.quit_btn.display(self.window)
 
     def refresh(self):

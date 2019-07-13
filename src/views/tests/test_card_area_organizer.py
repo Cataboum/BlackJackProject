@@ -30,8 +30,10 @@ def test_dealer_cards():
 
     assert signal_triggered.signal_trigger_count == 1
     assert len(organizer.dealer_area) == 1
-    assert (organizer.dealer_area[0].position.as_tuple ==
-            (dealer_card_area_config.x, dealer_card_area_config.y))
+    assert organizer.dealer_area[0].position.as_tuple == (
+        dealer_card_area_config.x,
+        dealer_card_area_config.y,
+    )
 
     organizer.add_card(card_2, "dealer")
 
@@ -41,13 +43,16 @@ def test_dealer_cards():
     assert len(organizer.dealer_area) == 2
 
     # Check if adding new card didn't change first card position
-    assert (organizer.dealer_area[0].position.as_tuple ==
-            (dealer_card_area_config.x, dealer_card_area_config.y))
+    assert organizer.dealer_area[0].position.as_tuple == (
+        dealer_card_area_config.x,
+        dealer_card_area_config.y,
+    )
 
     # Checking new card position, with offset
-    assert (organizer.dealer_area[1].position.as_tuple ==
-            (dealer_card_area_config.x + extra_card_offset.x,
-             dealer_card_area_config.y + extra_card_offset.y))
+    assert organizer.dealer_area[1].position.as_tuple == (
+        dealer_card_area_config.x + extra_card_offset.x,
+        dealer_card_area_config.y + extra_card_offset.y,
+    )
 
 
 def test_player_cards_single_hand():
@@ -70,9 +75,10 @@ def test_player_cards_single_hand():
     assert signal_triggered.signal_trigger_count == 1
     assert len(organizer.player_areas) == 1
     assert len(organizer.player_areas[0]) == 1
-    assert (organizer.player_areas[0][0].position.as_tuple ==
-            (player_card_area_config.x + player_card_area_config.width / 2,
-             player_card_area_config.y))
+    assert organizer.player_areas[0][0].position.as_tuple == (
+        player_card_area_config.x + player_card_area_config.width / 2,
+        player_card_area_config.y,
+    )
 
     organizer.add_card(card_2, "player", 0)
 
@@ -83,15 +89,18 @@ def test_player_cards_single_hand():
     assert len(organizer.player_areas[0]) == 2
 
     # Check if adding new card didn't change first card position
-    assert (organizer.player_areas[0][0].position.as_tuple ==
-            (player_card_area_config.x + player_card_area_config.width / 2,
-             player_card_area_config.y))
+    assert organizer.player_areas[0][0].position.as_tuple == (
+        player_card_area_config.x + player_card_area_config.width / 2,
+        player_card_area_config.y,
+    )
 
     # Checking new card position, with offset
-    assert (organizer.player_areas[0][1].position.as_tuple ==
-            (player_card_area_config.x + player_card_area_config.width / 2
-             + extra_card_offset.x,
-             player_card_area_config.y + extra_card_offset.y))
+    assert organizer.player_areas[0][1].position.as_tuple == (
+        player_card_area_config.x
+        + player_card_area_config.width / 2
+        + extra_card_offset.x,
+        player_card_area_config.y + extra_card_offset.y,
+    )
 
 
 def test_player_cards_multi_hand():
@@ -117,16 +126,18 @@ def test_player_cards_multi_hand():
     assert len(organizer.player_areas[1]) == 1
 
     # Check the old card's position (it should have changed)
-    assert (organizer.player_areas[0][0].position.as_tuple ==
-            (round(player_card_area_config.x +
-                   player_card_area_config.width / 3),
-             player_card_area_config.y))
+    assert organizer.player_areas[0][0].position.as_tuple == (
+        round(player_card_area_config.x
+              + player_card_area_config.width / 3),
+        player_card_area_config.y,
+    )
 
     # Checking new card position
-    assert (organizer.player_areas[1][0].position.as_tuple ==
-            (round(player_card_area_config.x + 2 *
-                   player_card_area_config.width / 3),
-             player_card_area_config.y))
+    assert organizer.player_areas[1][0].position.as_tuple == (
+        round(player_card_area_config.x
+              + 2 * player_card_area_config.width / 3),
+        player_card_area_config.y,
+    )
 
 
 def test_player_cards_split():
@@ -151,18 +162,20 @@ def test_player_cards_split():
     assert len(organizer.player_areas[0]) == 1
     assert len(organizer.player_areas[1]) == 1
     assert len(organizer.player_areas[2]) == 1
-    assert (organizer.player_areas[0][0].position.as_tuple ==
-            (round(player_card_area_config.x +
-                   player_card_area_config.width / 4),
-             player_card_area_config.y))
-    assert (organizer.player_areas[1][0].position.as_tuple ==
-            (round(player_card_area_config.x
-                   + 2 * player_card_area_config.width / 4),
-             player_card_area_config.y))
-    assert (organizer.player_areas[2][0].position.as_tuple ==
-            (round(player_card_area_config.x
-                   + 3 * player_card_area_config.width / 4),
-             player_card_area_config.y))
+    assert organizer.player_areas[0][0].position.as_tuple == (
+        round(player_card_area_config.x + player_card_area_config.width / 4),
+        player_card_area_config.y,
+    )
+    assert organizer.player_areas[1][0].position.as_tuple == (
+        round(player_card_area_config.x
+              + 2 * player_card_area_config.width / 4),
+        player_card_area_config.y,
+    )
+    assert organizer.player_areas[2][0].position.as_tuple == (
+        round(player_card_area_config.x
+              + 3 * player_card_area_config.width / 4),
+        player_card_area_config.y,
+    )
 
     # Check signal trigger
     assert signal_triggered.signal_trigger_count == 4

@@ -17,6 +17,7 @@ class CardAreaOrganizer:
     which triggers the signal that tells the ViewGame class to refresh its
     view.
     """
+
     dealer_card_area_config = game_view_config.card_areas.dealer
     player_card_area_config = game_view_config.card_areas.player
     extra_card_offset = game_view_config.card_areas.extra_card_offset
@@ -56,7 +57,7 @@ class CardAreaOrganizer:
         else:
             raise ValueError(
                 f"Unknown human type {human_type!r}, should be either "
-                f"\"dealer\" or \"player\""
+                f'"dealer" or "player"'
             )
         self.areas_updated.emit()
 
@@ -79,9 +80,9 @@ class CardAreaOrganizer:
                 areas_dict[area] = cards
             elif area == area_id:
                 areas_dict[area] = [cards[0]]
-                areas_dict[area+1] = [cards[1]]
+                areas_dict[area + 1] = [cards[1]]
             else:
-                areas_dict[area+1] = cards
+                areas_dict[area + 1] = cards
 
         for area, cards in areas_dict.items():
             for card in cards:
@@ -151,9 +152,7 @@ class CardAreaOrganizer:
         y_offset = self.extra_card_offset.y * len(self.player_areas[area_id])
 
         num_areas = len(self.player_areas)
-        player_area_width = (
-            self.player_card_area_config.width
-        )
+        player_area_width = self.player_card_area_config.width
 
         x_pos = round(
             self.player_card_area_config.x +
@@ -173,8 +172,6 @@ class CardAreaOrganizer:
         """
         card_image = load_image(convert_card_to_picture(card))
         card_tile = pygame.transform.scale(
-            card_image,
-            (cls.card_width,
-             cls.card_height)
+            card_image, (cls.card_width, cls.card_height)
         )
         return card_tile
