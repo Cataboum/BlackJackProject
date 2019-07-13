@@ -49,7 +49,9 @@ class CardAreaOrganizer:
             if area_id is None:
                 raise ValueError("Missing area_id for adding a player card")
             elif area_id > len(self.player_areas):
-                raise ValueError("Wrong area_id for adding a player card")
+                raise ValueError(
+                    f"Wrong area_id ({area_id}) for adding a player card: "
+                    f"only {len(self.player_areas)} are currently declared")
             elif area_id == len(self.player_areas):
                 self._add_new_player_area(card_tile, area_id)
             else:
@@ -68,6 +70,17 @@ class CardAreaOrganizer:
         :param int area_id: the id of the area we want to split
         :return: None
         """
+        if area_id >= len(self.player_areas):
+            raise ValueError(
+                f"Wrong area_id {area_id} for splitting a player hand,"
+                f"only {len(self.player_areas)} are currently declared"
+            )
+        if len(self.player_areas[area_id]) != 2:
+            raise ValueError(
+                f"Cannot split hand with {len(self.player_areas[area_id])} "
+                f"cards"
+            )
+
         areas_dict_ = {
             area: cards for area, cards in enumerate(self.player_areas)
         }
@@ -88,6 +101,11 @@ class CardAreaOrganizer:
             for card in cards:
                 self._add_player_card(card, area)
 
+        self.areas_updated.emit()
+
+    def clear_areas(self):
+        self.player_areas = []
+        self.dealer_area = []
         self.areas_updated.emit()
 
     def _add_dealer_card(self, card_tile):

@@ -4,10 +4,10 @@ from src.views.card_area_organizer import CardAreaOrganizer
 import pygame
 
 
-class SignalTriggered:
+class SignalTriggerCounter:
     signal_trigger_count = 0
 
-    def signal_triggered_method(self):
+    def signal_triggered(self):
         self.signal_trigger_count += 1
 
 
@@ -19,10 +19,10 @@ def test_dealer_cards():
     pygame.init()
     pygame.display.set_mode((1, 1))
 
-    signal_triggered = SignalTriggered()
+    signal_triggered = SignalTriggerCounter()
 
     organizer = CardAreaOrganizer()
-    organizer.areas_updated.attach(signal_triggered.signal_triggered_method)
+    organizer.areas_updated.attach(signal_triggered.signal_triggered)
 
     assert not organizer.dealer_area
 
@@ -63,10 +63,10 @@ def test_player_cards_single_hand():
     pygame.init()
     pygame.display.set_mode((1, 1))
 
-    signal_triggered = SignalTriggered()
+    signal_triggered = SignalTriggerCounter()
 
     organizer = CardAreaOrganizer()
-    organizer.areas_updated.attach(signal_triggered.signal_triggered_method)
+    organizer.areas_updated.attach(signal_triggered.signal_triggered)
 
     assert not organizer.player_areas
 
@@ -110,10 +110,10 @@ def test_player_cards_multi_hand():
     pygame.init()
     pygame.display.set_mode((1, 1))
 
-    signal_triggered = SignalTriggered()
+    signal_triggered = SignalTriggerCounter()
 
     organizer = CardAreaOrganizer()
-    organizer.areas_updated.attach(signal_triggered.signal_triggered_method)
+    organizer.areas_updated.attach(signal_triggered.signal_triggered)
 
     organizer.add_card(card_1, "player", 0)
     organizer.add_card(card_2, "player", 1)
@@ -148,10 +148,10 @@ def test_player_cards_split():
     pygame.init()
     pygame.display.set_mode((1, 1))
 
-    signal_triggered = SignalTriggered()
+    signal_triggered = SignalTriggerCounter()
 
     organizer = CardAreaOrganizer()
-    organizer.areas_updated.attach(signal_triggered.signal_triggered_method)
+    organizer.areas_updated.attach(signal_triggered.signal_triggered)
 
     organizer.add_card(card_1, "player", 0)
     organizer.add_card(card_2, "player", 0)
@@ -179,3 +179,23 @@ def test_player_cards_split():
 
     # Check signal trigger
     assert signal_triggered.signal_trigger_count == 4
+
+
+def test_clear_areas():
+    card_1 = Card(1)
+    card_2 = Card(2)
+    pygame.init()
+    pygame.display.set_mode((1, 1))
+
+    signal_triggered = SignalTriggerCounter()
+
+    organizer = CardAreaOrganizer()
+    organizer.areas_updated.attach(signal_triggered.signal_triggered)
+
+    organizer.add_card(card_1, "dealer")
+    organizer.add_card(card_2, "player", 0)
+    organizer.clear_areas()
+
+    assert signal_triggered.signal_trigger_count == 3
+    assert len(organizer.dealer_area) == 0
+    assert len(organizer.player_areas) == 0
