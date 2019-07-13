@@ -42,18 +42,18 @@ class CardAreaOrganizer:
         of the area to add the card to
         :return: None
         """
-        card_tile = self.create_card_tile(card)
+        card_tile = self._create_card_tile(card)
         if human_type == "dealer":
-            self.add_dealer_card(card_tile)
+            self._add_dealer_card(card_tile)
         elif human_type == "player":
             if area_id is None:
                 raise ValueError("Missing area_id for adding a player card")
             elif area_id > len(self.player_areas):
                 raise ValueError("Wrong area_id for adding a player card")
             elif area_id == len(self.player_areas):
-                self.add_new_player_area(card_tile, area_id)
+                self._add_new_player_area(card_tile, area_id)
             else:
-                self.add_player_card(card_tile, area_id)
+                self._add_player_card(card_tile, area_id)
         else:
             raise ValueError(
                 f"Unknown human type {human_type!r}, should be either "
@@ -86,11 +86,11 @@ class CardAreaOrganizer:
 
         for area, cards in areas_dict.items():
             for card in cards:
-                self.add_player_card(card, area)
+                self._add_player_card(card, area)
 
         self.areas_updated.emit()
 
-    def add_dealer_card(self, card_tile):
+    def _add_dealer_card(self, card_tile):
         """
         Adds the card to self.dealer_area
         :param pygame.Surface card_tile: the image representing the card
@@ -106,19 +106,19 @@ class CardAreaOrganizer:
 
         self.dealer_area.append(SurfaceWithPosition(card_tile, position))
 
-    def add_player_card(self, card_tile: pygame.Surface, area_id: int):
+    def _add_player_card(self, card_tile: pygame.Surface, area_id: int):
         """
         Adds the card to self.player_areas
         :param pygame.Surface card_tile: the image representing the card
         :param int area_id: id of the area to which we want to add the card
         :return: None
         """
-        position = self.compute_player_area_position(area_id)
+        position = self._compute_player_area_position(area_id)
         self.player_areas[area_id].append(
             SurfaceWithPosition(card_tile, position)
         )
 
-    def add_new_player_area(self, card_tile, area_id):
+    def _add_new_player_area(self, card_tile, area_id):
         """
         Called when adding a new card to a new player area. Since we add an
         area, we will need to re-compute position for all the already placed
@@ -135,11 +135,11 @@ class CardAreaOrganizer:
 
         for area, cards in areas_dict.items():
             for card in cards:
-                self.add_player_card(card, area)
+                self._add_player_card(card, area)
 
-        self.add_player_card(card_tile, area_id)
+        self._add_player_card(card_tile, area_id)
 
-    def compute_player_area_position(self, area_id: int) -> Coordinates:
+    def _compute_player_area_position(self, area_id: int) -> Coordinates:
         """
         Utility function, side-effect-free, used to compute the coordinates
         of the card to show, accounting for area id and the offset due to
@@ -163,7 +163,7 @@ class CardAreaOrganizer:
         return Coordinates(x_pos, y_pos)
 
     @classmethod
-    def create_card_tile(cls, card: Card) -> pygame.Surface:
+    def _create_card_tile(cls, card: Card) -> pygame.Surface:
         """
         Utility side-effect-free staticmethod. Loads the image corresponding
         to the card and scale it
