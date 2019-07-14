@@ -1,4 +1,3 @@
-from src.common.utils import Singleton
 from src.views.view_game import ViewGame
 from src.humans.Dealer import Dealer
 from src.humans.Player import Player
@@ -11,7 +10,7 @@ from pygame.locals import (
 )
 
 
-class GameController(metaclass=Singleton):
+class GameController:
     """
     A controller for all the game
     """
