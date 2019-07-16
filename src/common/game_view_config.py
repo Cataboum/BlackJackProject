@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from marshmallow import fields, Schema, post_load
 
@@ -84,14 +84,22 @@ class GameViewSchema(Schema):
     cards = fields.Nested(DimensionsSchema())
     game_buttons = fields.Nested(AreaDefinitionSchema())
 
+    def load(self, config: dict, **kwargs) -> Tuple[GameView, dict]:
+        """
+        The only reason we override this function is to add the type hints
+        so that auto-completion on editors works fine
+        :param config:
+        :return:
+        """
+        return super().load(config, **kwargs)
+
     @post_load
     def make(self, data) -> GameView:
         return GameView(**data)
 
 
 game_view_schema = GameViewSchema()
-game_view: GameView
-game_view_config, game_view_config_errors = game_view_schema.load(
+game_view_config, _ = game_view_schema.loads(
     CONFIG_GAME_VIEW
 )
 # TODO: Add tests for loading
