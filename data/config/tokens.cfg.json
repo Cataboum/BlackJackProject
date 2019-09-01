@@ -1,7 +1,7 @@
 {
-    "1": "token_white.jpg",
-    "5": "token_red.jpg",
-    "10": "token_blue.jpg",
-    "25": "token_green.jpg",
-    "100": "token_black.jpg"
+    "1": "token_white.png",
+    "5": "token_red.png",
+    "10": "token_blue.png",
+    "25": "token_green.png",
+    "100": "token_black.png"
 }
