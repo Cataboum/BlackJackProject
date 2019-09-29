@@ -9,12 +9,13 @@ from src.common.func_pictures import load_image
 
 from src.button import Button
 
-
+# TODO: Use a class instead of a function
 def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     """ The main function of the view of menu"""
 
     # Init window
     screen = window
+    state = Game.menu
 
     # Load background image
     bgd_tile = load_image("green_carpet.jpeg")
@@ -27,14 +28,18 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
 
     # Buttons
     btn_index = 0
-    default_btn_format = {'color': (0, 0, 0),
-                          'border': 0,
-                          'border_color': (255, 255, 255),
-                          'background': None}
-    selected_btn_format = {'color': (255, 255, 255),
-                           'border': 2,
-                           'border_color': (255, 255, 255),
-                           'background': (0, 170, 140)}
+    default_btn_format = {
+        'text_color': (0, 0, 0),
+        'bd': 0,
+        'bd_color': (255, 255, 255),
+        'bg_normal': None
+    }
+    selected_btn_format = {
+        'text_color': (255, 255, 255),
+        'bd': 2,
+        'bd_color': (255, 255, 255),
+        'bg_normal': (0, 170, 140)
+    }
 
     def update_button_display(btn_index: int, btns_list: List[Button]):
         # Update button view according btn_index
@@ -46,7 +51,7 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         screen.blit(background, (0, 0))
         screen.blit(title_text, (80, 30))
         for btn in btns_list:
-            btn.display(window)
+            btn.draw()
         pygame.display.flip()
 
     def move_btn_index(move: Moves, btn_index: int, btns_list: List[Button]):
@@ -57,21 +62,43 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         update_button_display(btn_index, btns_list)
 
         return btn_index
-    btn_play = Button(pos=(menu_buttons['play_btn']['x'], menu_buttons['play_btn']['y']),
-                      width=200, height=50, text="Start (s)", value=Game.play)
-    btn_options = Button(pos=(menu_buttons['option_btn']['x'], menu_buttons['option_btn']['y']),
-                         width=200, height=50, text="Options (o)", value=Game.option)
-    btn_quit = Button(pos=(menu_buttons['quit_btn']['x'], menu_buttons['quit_btn']['y']),
-                      width=200, height=50, text="Quit (Esc)", value=Game.quit)
+    
+    def cmd_play_btn():
+        nonlocal state
+        state = Game.play
+    
+    def cmd_option_btn():
+        nonlocal state
+        state = Game.option
+    
+    def cmd_quit_btn():
+        nonlocal state
+        state = Game.quit
+    
+    disp = (
+        ("play_btn", "Start (s)", cmd_play_btn),
+        ("option_btn", "Options (o)", cmd_option_btn),
+        ("quit_btn", "Quit (Esc)", cmd_quit_btn)
+    )
+    btns_list = list()
+    for iid, text, cmd in disp:
+        b = Button(
+            window=window,
+            text=text,
+            pos=(menu_buttons[iid]["x"], menu_buttons[iid]["y"]),
+            size=(200, 50)
+        )
+        b.signal.attach(cmd)
+        btns_list.append(b)
 
-    btns_list = [btn_play, btn_options, btn_quit]
+    # btns_list = [btn_play, btn_options, btn_quit]
     update_button_display(btn_index, btns_list)
 
     # Display on windows
     screen.blit(background, (0, 0))
     screen.blit(title_text, (80, 30))
     for btn in btns_list:
-        btn.display(window)
+        btn.draw()
 
     pygame.display.flip()
 
@@ -79,7 +106,6 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     all_sprites = pygame.sprite.RenderUpdates()
     clock = pygame.time.Clock()
 
-    state = Game.menu
     while state == Game.menu:
 
         # Clear all the sprites
@@ -105,18 +131,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
             elif event.type == KEYDOWN and event.key == K_UP:
                 btn_index = move_btn_index(Moves.up, btn_index, btns_list)
 
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                pos = pygame.mouse.get_pos()
-                if btn_play.isClicked(pos):
-                    btn_play.execute()
-
-                    state = Game.play
-                elif btn_options.isClicked(pos):
-                    btn_options.execute()
-                    state = Game.option
-                elif btn_quit.isClicked(pos):
-                    btn_quit.execute()
-                    state = Game.quit
+            for btn in btns_list:
+                btn.handle_event(event)
 
         # Update the scene
         dirty = all_sprites.draw(screen)

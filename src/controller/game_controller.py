@@ -36,10 +36,17 @@ class GameController:
         self.view_game = None
         self.player_wallet = 500
         self.deck = Deck()
+        self.state = False
         # self.view_game = View_game(window, view_config)
 
     def gameLaunch(self):
         self.view_game = ViewGame(self.window)
+        self.view_game.buttons["card"].signal.attach(self.btn_card)
+        self.view_game.buttons["bet"].signal.attach(self.btn_bet)
+        self.view_game.buttons["end_turn"].signal.attach(self.btn_end_turn)
+        self.view_game.buttons["split"].signal.attach(self.btn_split)
+        self.view_game.buttons["double"].signal.attach(self.btn_double)
+        self.view_game.buttons["quit"].signal.attach(self.btn_quit)
 
     def initiatePlayers(self):
         """
@@ -113,11 +120,13 @@ class GameController:
                     return False
                 elif event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
-                    if self.view_game.quit_btn.isClicked(pos):
+                    if self.view_game.buttons["quit"].collide(pos):
                         return False
                 else:
                     print(human.name + " is betting")
                     state = False
+                for btn in self.view_game.buttons.values():
+                    btn.handle_event(event)
 
         #loop to deal hands to everybody
         for human in self.humans_list:
@@ -137,8 +146,8 @@ class GameController:
             # Get list of possible actions
             # Manage interfaces
             # Let human choose
-            state = True
-            while state:
+            self.state = True
+            while self.state:
                 event = pygame.event.wait()
                 if event.type == QUIT:
                     return False
@@ -164,7 +173,7 @@ class GameController:
 
                     elif event.key in [K_3, K_KP3] :
                         print(3)
-                        state = False
+                        self.state = False
 
                     elif event.key in [K_4, K_KP4] :
                         print(4)
@@ -183,9 +192,58 @@ class GameController:
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    if self.view_game.quit_btn.isClicked(pos):
+                    if self.view_game.buttons["quit"].collide(pos):
                         return False
+                
+                for btn in self.view_game.buttons.values():
+                    btn.handle_event(event)
 
         dealer_decision = self.dealer.chooseAction()
         # TODO: use dealer_decision if result is hit
         return True
+    
+    # =========================================================================
+    # = Buttons
+    # =========================================================================
+
+    def btn_card(self):
+        """
+        Manage actions on card button
+        """
+
+        print("btn_card")
+
+    def btn_bet(self):
+        """
+        Manage actions on bet button
+        """
+
+        print("btn_btn")
+
+    def btn_end_turn(self):
+        """
+        Manage actions on end turn button
+        """
+
+        print("btn_end_turn")
+
+    def btn_split(self):
+        """
+        Manage actions on split button
+        """
+
+        print("btn_split")
+
+    def btn_double(self):
+        """
+        Manage actions on double button
+        """
+
+        print("btn_double")
+
+    def btn_quit(self):
+        """
+        Manage quit on quit button
+        """
+
+        print("btn_quit")
