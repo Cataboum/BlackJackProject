@@ -5,7 +5,6 @@
 # ============================================================================
 
 import os
-from threading import Thread
 
 import pygame
 from pygame.locals import (
