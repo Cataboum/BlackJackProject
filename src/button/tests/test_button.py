@@ -1,9 +1,14 @@
 from src.button import Button
 
+import pygame
+
+
+pygame.init()
+
 
 def testInitButton():
     try:
-        button = Button(text="Test")
+        btn = Button(text="Test")
     except:
         assert False
     else:
