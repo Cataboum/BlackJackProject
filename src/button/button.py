@@ -145,6 +145,13 @@ class Button:
     # = Public methods
     # =========================================================================
 
+    def collide(self, pos):
+        """
+        Return True if the position is on the button
+        """
+
+        return self.rect.collidepoint(pos)
+
     def set(self, **kwargs):
         """
         Set attributes to the button
