@@ -51,7 +51,8 @@ class Player:
         """
         if (
                 self.check_double_bet_is_possible(index_of_hand_to_split)
-                and self.hands[index_of_hand_to_split].hand.checkSplitIsPossible()):
+                and self.hands[index_of_hand_to_split].hand.checkSplitIsPossible()
+        ):
             return True
 
         return False
