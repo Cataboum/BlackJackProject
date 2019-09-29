@@ -91,7 +91,6 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         b.signal.attach(cmd)
         btns_list.append(b)
 
-    # btns_list = [btn_play, btn_options, btn_quit]
     update_button_display(btn_index, btns_list)
 
     # Display on windows
