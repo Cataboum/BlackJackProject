@@ -1,5 +1,3 @@
-from threading import Thread
-
 from src.views.view_game import ViewGame
 from src.humans.dealer import Dealer
 from src.humans.player import Player
@@ -53,7 +51,7 @@ class GameController:
         number_of_player = 1
 
         for i in range(number_of_player):
-            #ask the name of the player and create the Player
+            # ask the name of the player and create the Player
             name_of_player = "Jesus"
             self.add_human(Player(name_of_player, self.player_wallet))
 
@@ -125,17 +123,16 @@ class GameController:
                     print(human.name + " is betting")
                     state = False
 
-        #loop to deal hands to everybody
+        # loop to deal hands to everybody
         for human in self.humans_list:
             print(human.name + "is receiving cards.")
             # at initialization we only change the first hand of the player with 2 cards
             human.add_card(self.deck.getCard(), 0)
             human.add_card(self.deck.getCard(), 0)
 
-        #giving the dealer a hand (with 2 card)
+        # giving the dealer a hand (with 2 card)
         self.dealer.add_card(self.deck.getCard())
         self.dealer.add_card(self.deck.getCard())
-
 
     def play_one_round(self):
         for human in self.humans_list:
@@ -155,7 +152,7 @@ class GameController:
                         if event.key == K_ESCAPE:
                             return False
 
-                        elif event.key in [K_1, K_KP1] :
+                        elif event.key in [K_1, K_KP1]:
                             print(1)
                             card = self.deck.getCard()
                             human.add_card(card, hand_idx)
@@ -164,7 +161,7 @@ class GameController:
                                 print("Is burnt or black jack")
                                 state = False
 
-                        elif event.key in [K_2, K_KP2] :
+                        elif event.key in [K_2, K_KP2]:
                             print(2)
                             bet_amount = 5
                             hand_id = 0
@@ -173,23 +170,23 @@ class GameController:
                                 hand_id = input("Hand number for bet : ")
                             human.bet(int(bet_amount), int(hand_id))
 
-                        elif event.key in [K_3, K_KP3] :
+                        elif event.key in [K_3, K_KP3]:
                             print(3)
                             state = False
 
-                        elif event.key in [K_4, K_KP4] :
+                        elif event.key in [K_4, K_KP4]:
                             print(4)
                             hand_id = 0
-                            if len(human.hands)>=2:
+                            if len(human.hands) >= 2:
                                 print("You have %i hands" % len(human.hands))
                                 hand_id = input("Hand number for bet : ")
                             human.split(hand_id)
 
-                        elif event.key in [K_5, K_KP5] :
+                        elif event.key in [K_5, K_KP5]:
                             print(5)
                             human.double(0)
 
-                        elif event.key in [K_6, K_KP6] :
+                        elif event.key in [K_6, K_KP6]:
                             return False
 
                     elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -221,6 +218,5 @@ class GameController:
                         print("Player %s win with hand %s." % (human, str(hand)))
                     elif hand.hand == self.dealer.hand:
                         print("Player %s with hand %s is even with the dealer." % (human, str(hand)))
-
 
         return True
