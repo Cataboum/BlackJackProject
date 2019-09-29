@@ -26,7 +26,8 @@ from src.common.game_view_config import game_view_config
 from src.common.config import ConfigPath
 from src.views import view_menu, view_option
 from src.controller.game_controller import GameController
-from src.tokens import Tokens
+from src.views.image_loaders.cardsloader import CardsLoader
+from src.views.image_loaders.tokensloader import TokensLoader
 
 
 # ============================================================================
@@ -52,7 +53,8 @@ class Main:
         self.ctrl = GameController(self.game_window)
 
         # Needs Pygame initialization
-        Tokens.initialize(ConfigPath.file("tokens"))
+        TokensLoader.initialize(ConfigPath.file("tokens"))
+        CardsLoader.initialize()
 
         # mainloop
         self.main_loop()

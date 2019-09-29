@@ -1,11 +1,11 @@
 import json
 import os
 
-import src.common.func_pictures as fct
+from src.common.func_pictures import load_image
 from src.common.config import ConfigPath
 
 
-class Tokens:
+class TokensLoader:
     data = dict()
     
     @classmethod
@@ -18,10 +18,10 @@ class Tokens:
         for k in list(cls.data.keys()):
             filename = cls.data.pop(k)
             path = os.path.join(ConfigPath.folder("tokens"), filename)
-            cls.data[int(k)] = fct.load_image(path)
+            cls.data[int(k)] = load_image(path)
     
     @classmethod
-    def getImage(cls, value):
+    def get_image(cls, value):
         """
         Return the image corresponding to the value
         
@@ -34,9 +34,9 @@ class Tokens:
         return cls.data[value]
     
     @classmethod
-    def whichTokens(cls, value):
+    def decompose_value_to_tokens(cls, value):
         """
-        Return a dictionnary with the token values and their quantity.
+        Return a dictionary with the token values and their quantity.
         The sum of the tokens being equal to the value.
         
         :param value: researched value

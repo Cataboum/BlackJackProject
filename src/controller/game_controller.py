@@ -1,3 +1,5 @@
+from threading import Thread
+
 from src.views.view_game import ViewGame
 from src.humans.dealer import Dealer
 from src.humans.player import Player
@@ -29,7 +31,6 @@ class GameController:
     A controller for all the game
     """
     def __init__(self, window):
-
         print("Enter in controller")
         self.window = window
         self.humans_list = []
@@ -39,10 +40,10 @@ class GameController:
         self.deck = Deck()
         # self.view_game = View_game(window, view_config)
 
-    def gameLaunch(self):
+    def game_launch(self):
         self.view_game = ViewGame(self.window)
 
-    def initiatePlayers(self):
+    def initiate_players(self):
         """
         ask the player(s) how many they are and their name(s)
 
@@ -54,12 +55,12 @@ class GameController:
         for i in range(number_of_player):
             #ask the name of the player and create the Player
             name_of_player = "Jesus"
-            self.addHuman(Player(name_of_player, self.player_wallet))
+            self.add_human(Player(name_of_player, self.player_wallet))
 
     def refresh(self):
         self.view_game.refresh()
 
-    def addHuman(self, human) -> bool:
+    def add_human(self, human) -> bool:
         """
         Adding one player into the list of humans to handle at each round
 
@@ -73,11 +74,11 @@ class GameController:
             # Given human isn't a player
             return False
 
-    def removePlayer(self, player_uuid) -> bool:
+    def remove_player(self, player_uuid) -> bool:
         """
         Removing one player
 
-        :param human: Player's id to remove
+        :param player_uuid: Player's id to remove
         :type arg1: Player
         """
         if len(self.humans_list) > 2:
@@ -91,7 +92,7 @@ class GameController:
         # Id not found
         return False
 
-    def resetAllHumans(self):
+    def reset_all_humans(self):
         """Resetting all humans : no more player and new dealer"""
         self.humans_list = []
         self.dealer = Dealer()
@@ -103,8 +104,8 @@ class GameController:
         """
 
         for human in self.humans_list:
-            human.clearHands()
-        self.dealer.clearHand()
+            human.clear_hands()
+        self.dealer.clear_hand()
 
         # loop only for betting. Betting buttons should be the only one modifiable
         for human in self.humans_list:
@@ -128,12 +129,12 @@ class GameController:
         for human in self.humans_list:
             print(human.name + "is receiving cards.")
             # at initialization we only change the first hand of the player with 2 cards
-            human.addCard(self.deck.getCard(), 0)
-            human.addCard(self.deck.getCard(), 0)
+            human.add_card(self.deck.getCard(), 0)
+            human.add_card(self.deck.getCard(), 0)
 
         #giving the dealer a hand (with 2 card)
-        self.dealer.addCard(self.deck.getCard())
-        self.dealer.addCard(self.deck.getCard())
+        self.dealer.add_card(self.deck.getCard())
+        self.dealer.add_card(self.deck.getCard())
 
 
     def play_one_round(self):
@@ -150,7 +151,6 @@ class GameController:
                     event = pygame.event.wait()
                     if event.type == QUIT:
                         return False
-
                     elif event.type == KEYDOWN :
                         if event.key == K_ESCAPE:
                             return False
@@ -158,7 +158,7 @@ class GameController:
                         elif event.key in [K_1, K_KP1] :
                             print(1)
                             card = self.deck.getCard()
-                            human.addCard(card, hand_idx)
+                            human.add_card(card, hand_idx)
                             print("You : " + str(human.hands[hand_idx].hand))
                             if human.hands[hand_idx].hand.is_burnt or human.hands[hand_idx].hand.is_black_jack:
                                 print("Is burnt or black jack")
@@ -197,15 +197,15 @@ class GameController:
                         if self.view_game.quit_btn.isClicked(pos):
                             return False
 
-        dealer_decision = self.dealer.chooseAction()
+        dealer_decision = self.dealer.choose_action()
         print("Dealer hand : " + str(self.dealer.hand))
 
         while dealer_decision != Decision.stand:
             print(dealer_decision)
             if dealer_decision == Decision.hit:
-                self.dealer.addCard(self.deck.getCard())
+                self.dealer.add_card(self.deck.getCard())
             print("Dealer hand : " + str(self.dealer.hand))
-            dealer_decision = self.dealer.chooseAction()
+            dealer_decision = self.dealer.choose_action()
 
         print("Dealer decision : " + str(dealer_decision))
 
@@ -221,5 +221,6 @@ class GameController:
                         print("Player %s win with hand %s." % (human, str(hand)))
                     elif hand.hand == self.dealer.hand:
                         print("Player %s with hand %s is even with the dealer." % (human, str(hand)))
+
 
         return True

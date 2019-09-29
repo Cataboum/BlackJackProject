@@ -7,7 +7,7 @@ from src.cards.card import Card
 from src.common.func_pictures import load_image
 from src.common.game_view_config import game_view_config
 from src.views.card_area_organizer import CardAreaOrganizer
-from src.tokens import Tokens
+from src.views.image_loaders.tokensloader import TokensLoader
 
 
 class ViewGame:
@@ -133,7 +133,7 @@ class ViewGame:
                 self.window.blit(el.surface, el.position.as_tuple)
 
         # TODO: Tokens should be resized and transparent
-        token = Tokens.getImage(10)
+        token = TokensLoader.get_image(10)
         token = pygame.transform.scale(
             token, (game_view_config.tokens.width, game_view_config.tokens.height)
         )
