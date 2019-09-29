@@ -41,7 +41,7 @@ class Player:
 
         return False
 
-    def checkSplitIsPossible(self, index_of_hand_to_split) -> bool:
+    def check_split_is_possible(self, index_of_hand_to_split) -> bool:
         """
         Check if a split is possible according to the money bet on the hand and
         the value of the wallet.
@@ -49,13 +49,15 @@ class Player:
            - True : split can be done
            - False: split can't be done
         """
-        if (self.checkDoubleBetIsPossible(index_of_hand_to_split)
-                and self.hands[index_of_hand_to_split].hand.checkSplitIsPossible()):
+        if (
+                self.check_double_bet_is_possible(index_of_hand_to_split)
+                and self.hands[index_of_hand_to_split].hand.checkSplitIsPossible()
+        ):
             return True
 
         return False
 
-    def checkDoubleBetIsPossible(self, index_of_the_bet_to_double) -> bool:
+    def check_double_bet_is_possible(self, index_of_the_bet_to_double) -> bool:
         """
         Check if player can bet again what he has already bet on his hands
         :return: True if double is possible False if not
@@ -69,7 +71,7 @@ class Player:
         """
         Double the money spend by the player
         """
-        if self.checkDoubleBetIsPossible(index_of_the_hand_to_double):
+        if self.check_double_bet_is_possible(index_of_the_hand_to_double):
             # ---- Double the bet ----
             # 3 - lock the hand
             self.hands[index_of_the_hand_to_double].is_lock = True
@@ -79,7 +81,7 @@ class Player:
 
             # 2 - adding the new bet value
             self.hands[index_of_the_hand_to_double].hand_bet *= 2
-        else :
+        else:
             print("<class Player>[double] double bet on Player", self.uuid, "is impossible")
 
     def split(self, index_of_hand_to_split):
@@ -87,7 +89,7 @@ class Player:
         Check if the hand can be split if so it split it
         """
 
-        if self.checkSplitIsPossible(index_of_hand_to_split):
+        if self.check_split_is_possible(index_of_hand_to_split):
             # if check is ok cards are good and wallet have enough money
             splitted_hand = self.hands[index_of_hand_to_split].hand.split()
             bet_of_the_hand = self.hands[index_of_hand_to_split].hand_bet
@@ -98,7 +100,8 @@ class Player:
             if len(splitted_hand) == 2:
                 # ---- Creating the new hands ---
                 # 1 - reinitialize hands of the player
-                self.clearHands()
+                self.clear_hands()
+                self.hands.pop()
 
                 # 2 - adding first hand with the associated bet
                 self.hands.append(PlayerHand(splitted_hand[0],
@@ -110,13 +113,14 @@ class Player:
             else:
                 raise CardsAPIError(
                     f"Split does not return exactly two hands for "
-                    f"Player: {self!r}")
+                    f"Player: {self!r}"
+                )
 
-    def addCard(self, card_to_add, index_of_the_hand_to_change):
+    def add_card(self, card_to_add, index_of_the_hand_to_change):
         self.hands[index_of_the_hand_to_change].hand += card_to_add
 
-    def clearHands(self):
-        self.hands = []
+    def clear_hands(self):
+        self.hands = [PlayerHand()]
 
     def __repr__(self):
         return f"Player(name = {self.name}, uuid = {self.uuid},\n" \

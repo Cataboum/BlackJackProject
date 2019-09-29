@@ -1,12 +1,11 @@
-import copy
 from typing import List
 
 import pygame
 
 from src.cards.card import Card
-from src.common.func_pictures import load_image, convert_card_to_picture
 from src.common.game_view_config import game_view_config, Coordinates
 from src.common.utils import Signal, SurfaceWithPosition
+from src.views.image_loaders.cardsloader import CardsLoader
 
 
 class CardAreaOrganizer:
@@ -21,8 +20,7 @@ class CardAreaOrganizer:
     dealer_card_area_config = game_view_config.card_areas.dealer
     player_card_area_config = game_view_config.card_areas.player
     extra_card_offset = game_view_config.card_areas.extra_card_offset
-    card_width = game_view_config.cards.width
-    card_height = game_view_config.cards.height
+
     window_width = game_view_config.window.width
     window_height = game_view_config.window.height
 
@@ -188,8 +186,4 @@ class CardAreaOrganizer:
         :param Card card: the card we want to load the image for
         :return pygame.Surface: The image of the card, loaded and scaled
         """
-        card_image = load_image(convert_card_to_picture(card))
-        card_tile = pygame.transform.scale(
-            card_image, (cls.card_width, cls.card_height)
-        )
-        return card_tile
+        return CardsLoader.get_image(card.name, card.color)
