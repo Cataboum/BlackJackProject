@@ -1,188 +1,195 @@
+# ============================================================================
+# =
+# = Imports
+# =
+# ============================================================================
+
+
+import enum
 import pygame
+
+from src.common.utils import Signal
+
 
 # ============================================================================
 # =
-# = Button
+# = Enum
 # =
 # ============================================================================
+
+
+class State(enum.Enum):
+    normal = enum.auto()
+    hover = enum.auto
+    pressed = enum.auto()
+
+
+# =============================================================================
+# =
+# = Button
+# =
+# =============================================================================
 
 
 class Button:
     """
-    A button to be displayed on screen
+    Set attributes to the button
 
-    :param pos: position of the button
-    :type pos: 2-tuple
-    :param width: width of the button
-    :type width: int
-    :param height: height of the button
-    :type height: int
-    :param text: text to display on the button
-    :type text: str
-    :param command: function to execute when clicked
-    :type command: function
-    :param state: ["disabled", "enabled"]
-    :type state: str
-    :param background: background of the Button
-    :type background: 3-tuple
-    :param color: text color
-    :type color: 3-tuple
-    :param border: border size
-    :type border: int
-    :param border_color: border color
-    :type border_color: 3-tuple
+    :param pygame.Surface window: surface where to blit the button
+    :param 3-tuple bg_normal: color for normal background
+    :param 3-tuple bg_hover: color for background when hover
+    :param 3-tuple bg_pressed: color for background when pressed
+    :param int bd: border size
+    :param 3-tuple bd_color: color for the border
+    :param str text: text to display on button
+    :param dict text_font: {file: font family, size: font size}
+    :param 3-tuple text_color: color for the text
     """
 
-    def __init__(self, **kwargs):
+    rect = pygame.Rect(0, 0, 100, 80)
+    state = State.normal
 
-        self.__validKwargs = {"pos", "width", "height", "text", "color", "background",
-                              "command", "value", "state", "border", "border_color"}
-        self.rect = pygame.Rect(0, 0, 0, 0)
-        self.text = "Button"
-        self.color = (0, 0, 0)
-        self.background = None
-        self.command = self.__emptyFunc
-        self.value = None
-        self.state = "enabled"
-        self.border = 0
-        self.border_color = (0, 0, 0)
-        self.__setFromKwargs(kwargs)
+    # Background
+    bg = None
+    bg_normal = None
+    bg_hover = None
+    bg_pressed = None
+    # Border
+    bd = 0
+    bd_color = (0, 0, 0)
+    # Text
+    text = "Button"
+    text_font = {"file": None, "size": 30}
+    text_color = (0, 0, 0)
+    text_core = None
+    # command
+    signal = Signal()
 
-    def set(self, **kwargs):
+    def __init__(self, window: pygame.Surface=None, **kwargs):
+        # Set attributes
+        self.window = window
+        self.__setKwargs(**kwargs)
+        self.text_core = pygame.font.Font(None, 30)
+    
+    def __setKwargs(self, **kwargs):
         """
-        Set the values
+        Set attributes to the button
 
-        :param pos: position of the button
-        :type pos: 2-tuple
-        :param width: width of the button
-        :type width: int
-        :param height: height of the button
-        :type height: int
-        :param text: text to display on the button
-        :type text: str
-        :param command: function to execute when clicked
-        :type command: function
-        :param state: ["disabled", "enabled"]
-        :type state: str
-        :param background: background of the Button
-        :type background: 3-tuple
-        """
-
-        self.__setFromKwargs(kwargs)
-
-    def execute(self):
-        """
-        Execute the command if it was given
+        :param 3-tuple bg_normal: color for normal background
+        :param 3-tuple bg_hover: color for background when hover
+        :param 3-tuple bg_pressed: color for background when pressed
+        :param int bd: border size
+        :param 3-tuple bd_color: color for the border
+        :param str text: text to display on button
+        :param dict text_font: {file: font family, size: font size}
+        :param 3-tuple text_color: color for the text
         """
 
-        if self.state == "enabled":
-            self.command()
+        # Validate kwargs
+        attr = [
+            "bg_normal", "bg_hover", "bg_pressed",
+            "bd", "bd_color",
+            "text", "text_font", "text_color",
+            "pos", "size"
+        ]
+        for kwarg in kwargs:
+            if kwarg not in attr:
+                raise ValueError(f"{kwarg} is not a valid attribute")
+        self.__dict__.update(**kwargs)
 
-    def isClicked(self, pos):
+        # If a parameter has changed
+        # Update text_core
+        if "text_font" in kwargs:
+            self.text_core = pygame.font.Font(**self.text_font)
+        # Update rect
+        if "pos" in kwargs:
+            self.rect.x, self.rect.y = kwargs["pos"]
+        if "size" in kwargs:
+            self.rect.w, self.rect.h = kwargs["size"]
+    
+    # =========================================================================
+    # = Events
+    # =========================================================================
+    
+    def __on_clic_down(self):
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(*pos):
+            self.state = State.pressed
+            self.draw()
+
+    def __on_clic_up(self):
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(*pos):
+            self.state = State.hover
+            self.signal.emit()
+        else:
+            self.state = State.normal
+        self.draw()
+    
+    def __on_hover(self):
+        pos = pygame.mouse.get_pos()
+        changed = False
+        # If on button
+        if self.rect.collidepoint(*pos):
+            if self.state == State.normal:
+                self.state = State.hover
+                changed = True
+        else:
+            if self.state == State.hover:
+                self.state = State.normal
+                changed = True
+
+        if changed:
+            self.draw()
+    
+    # =========================================================================
+    # = Public methods
+    # =========================================================================
+
+    def handle_event(self, event):
         """
-        Return True is the pos is in the Button
+        Handle the events used by the button
+
+        :param pygame.event event: event generated by pygame
         """
 
-        return self.rect.collidepoint(pos)
+        # If button is clicked
+        if event.type == pygame.MOUSEMOTION:
+            self.__on_hover()
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.__on_clic_down()
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            self.__on_clic_up()
 
-    def display(self, window):
+    def draw(self):
         """
-        Display the button on the window
+        Draw the button on window
         """
 
-        core_font = pygame.font.Font(None, 30)
-        core_text = core_font.render(self.text, 2, self.color)
+        core_text = self.text_core.render(self.text, 2, self.text_color)
 
         x_b, y_b = self.rect.x, self.rect.y
         w_b, h_b = self.rect.width, self.rect.height
         w_t, h_t = core_text.get_size()
-
         mid_x = x_b + (w_b - w_t) // 2
         mid_y = y_b + (h_b - h_t) // 2
 
-        if self.background is not None:
-            pygame.draw.rect(window, self.background, self.rect)
+        self.bg = {
+            State.normal: self.bg_normal,
+            State.hover: self.bg_hover,
+            State.pressed: self.bg_pressed
+        }.get(self.state, None)
 
-        if self.border > 0:
+        if self.bg is not None:
+            pygame.draw.rect(self.window, self.bg, self.rect)
+
+        if self.bd > 0:
             points = (
                 (x_b, y_b),
                 (x_b, y_b + h_b),
                 (x_b + w_b, y_b + h_b),
                 (x_b + w_b, y_b)
             )
-            pygame.draw.lines(window, self.border_color, True, points, self.border)
+            pygame.draw.lines(self.window, self.bd_color, True, points, self.bd)
 
-        window.blit(core_text, (mid_x, mid_y))
-
-    def __setFromKwargs(self, kwargs: dict):
-        """
-        Set the values from the kwargs
-        """
-
-        self.__validateKwargs(kwargs.keys())
-
-        if "pos" in kwargs:
-            self.rect.x, self.rect.y = kwargs["pos"]
-
-        if "width" in kwargs:
-            self.rect.width = kwargs["width"]
-
-        if "height" in kwargs:
-            self.rect.height = kwargs["height"]
-
-        if "text" in kwargs:
-            self.text = kwargs["text"]
-
-        if "color" in kwargs:
-            self.color = kwargs["color"]
-
-        if "background" in kwargs:
-            self.background = kwargs["background"]
-
-        if "command" in kwargs:
-            self.command = kwargs["command"]
-            self.state = "enabled"
-
-        if "value" in kwargs:
-            self.value = kwargs["value"]
-
-        if "state" in kwargs:
-            self.state = kwargs["state"]
-
-        if "border" in kwargs:
-            self.border = kwargs["border"]
-
-        if "border_color" in kwargs:
-            self.border_color = kwargs["border_color"]
-
-    def __validateKwargs(self, kwargs: dict):
-        """
-        Parse all the kwargs and raise an error if one isn't correct
-        """
-
-        for key in kwargs:
-            if key not in self.__validKwargs:
-                err = "%s is not a valid argument : [%s]"
-                args = ", ".join(self.__validKwargs)
-                raise AttributeError(err % (key, args))
-
-    def __emptyFunc(self):
-        pass
-
-    def __str__(self):
-        """
-        To print the caracteristics of the Button
-        """
-
-        txt = "Button:\n"
-        txt += "- pos (%d, %d)\n" % (self.rect.x, self.rect.y)
-        txt += "- width %d\n" % self.rect.width
-        txt += "- height %d\n" % self.rect.height
-        txt += "- text %s\n" % self.text
-
-        return txt
-
-
-if __name__ == '__main__':
-    btn = Button(text="Ok")
-    btn.set(pos=(200, 200), width=200, height=50, command=lambda: ...)
+        self.window.blit(core_text, (mid_x, mid_y))
