@@ -94,17 +94,18 @@ class Button:
         for kwarg in kwargs:
             if kwarg not in attr:
                 raise ValueError(f"{kwarg} is not a valid attribute")
-        self.__dict__.update(**kwargs)
 
         # If a parameter has changed
+        # Update rect
+        if "pos" in kwargs:
+            self.rect.x, self.rect.y = kwargs.pop("pos")
+        if "size" in kwargs:
+            self.rect.w, self.rect.h = kwargs.pop("size")
+
+        self.__dict__.update(**kwargs)
         # Update text_core
         if "text_font" in kwargs:
             self.text_core = pygame.font.Font(**self.text_font)
-        # Update rect
-        if "pos" in kwargs:
-            self.rect.x, self.rect.y = kwargs["pos"]
-        if "size" in kwargs:
-            self.rect.w, self.rect.h = kwargs["size"]
     
     # =========================================================================
     # = Events
