@@ -46,28 +46,27 @@ class Button:
     :param 3-tuple text_color: color for the text
     """
 
-    rect = pygame.Rect(0, 0, 100, 80)
-    state = State.normal
-
-    # Background
-    bg = None
-    bg_normal = None
-    bg_hover = None
-    bg_pressed = None
-    # Border
-    bd = 0
-    bd_color = (0, 0, 0)
-    # Text
-    text = "Button"
-    text_font = {"file": None, "size": 30}
-    text_color = (0, 0, 0)
-    text_core = None
-    # command
-    signal = Signal()
-
     def __init__(self, window: pygame.Surface=None, **kwargs):
         # Set attributes
         self.window = window
+        self.state = State.normal
+        # Rectangle
+        self.rect = pygame.Rect(0, 0, 100, 80)
+        # Background
+        self.bg = None
+        self.bg_normal = None
+        self.bg_hover = None
+        self.bg_pressed = None
+        # Border
+        self.bd = 0
+        self.bd_color = (0, 0, 0)
+        # Text
+        self.text = "Button"
+        self.text_font = {"file": None, "size": 30}
+        self.text_color = (0, 0, 0)
+        # command
+        self.signal = Signal()
+
         self.__setKwargs(**kwargs)
         self.text_core = pygame.font.Font(None, 30)
     
@@ -145,6 +144,22 @@ class Button:
     # =========================================================================
     # = Public methods
     # =========================================================================
+
+    def set(self, **kwargs):
+        """
+        Set attributes to the button
+
+        :param 3-tuple bg_normal: color for normal background
+        :param 3-tuple bg_hover: color for background when hover
+        :param 3-tuple bg_pressed: color for background when pressed
+        :param int bd: border size
+        :param 3-tuple bd_color: color for the border
+        :param str text: text to display on button
+        :param dict text_font: {file: font family, size: font size}
+        :param 3-tuple text_color: color for the text
+        """
+
+        self.__setKwargs(**kwargs)
 
     def handle_event(self, event):
         """
