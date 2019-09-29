@@ -96,7 +96,7 @@ class GameController:
         self.humans_list = []
         self.dealer = Dealer()
 
-    def firstRound(self):
+    def first_round(self):
         """
         First round allow the players to bet them deal the card for everybody
         :return: bool : state of the round
@@ -136,7 +136,7 @@ class GameController:
         self.dealer.addCard(self.deck.getCard())
 
 
-    def playOneRound(self):
+    def play_one_round(self):
         for human in self.humans_list:
             print(str(human) + " round")
             for hand_idx in range(len(human.hands)):

@@ -5,6 +5,7 @@
 # ============================================================================
 
 import os
+from threading import Thread
 
 import pygame
 from pygame.locals import (
@@ -42,27 +43,21 @@ class Main:
 
     def __init__(self):
 
-        # Configuration
-        self.loadConfig()
-
         # Init pygame
-        self.initPygame()
-        self.initController()
+        self.game_window = None
+        self.menu_window = None
+        self.init_pygame()
+
+        # Init GameController
+        self.ctrl = GameController(self.game_window)
 
         # Needs Pygame initialization
         Tokens.initialize(ConfigPath.file("tokens"))
 
         # mainloop
-        self.mainloop()
+        self.main_loop()
 
-    def loadConfig(self):
-        """
-        Load the configuration file
-        """
-
-        file_config = os.path.join(DIR_CONFIG, "ui.cfg.json")
-
-    def initPygame(self):
+    def init_pygame(self):
         """
         Initialize the main screen
         """
@@ -78,14 +73,7 @@ class Main:
             CONFIG_MENU["window"]["height"],
         ))
 
-    def initController(self):
-        """
-        Initialize the game_manager
-        """
-
-        self.ctrl = GameController(self.game_window)
-
-    def mainloop(self):
+    def main_loop(self):
         """
         The mainloop the launch the game
         """
@@ -95,12 +83,12 @@ class Main:
 
         while state != Game.quit:
             if state == Game.menu:
-                self.ctrl.resetAllHumans()
+                self.ctrl.reset_all_humans()
                 state, param = view_menu.main(
                     self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
             elif state == Game.play:
-                self.ctrl.gameLaunch()
-                state = self.gameLoop()
+                self.ctrl.game_launch()
+                state = self.game_loop()
                 # state, param = view_game.main(self.window, self.config["window"])
             elif state == Game.option:
                 state, param = view_option.main(self.menu_window, CONFIG_MENU["window"])
@@ -109,7 +97,7 @@ class Main:
 
         pygame.quit()
 
-    def gameLoop(self):
+    def game_loop(self):
         """
         The loop of the game which communicate with controller
         """
@@ -117,7 +105,7 @@ class Main:
         print("GameLoop")
 
         # First Create Player
-        self.ctrl.initiatePlayers()
+        self.ctrl.initiate_players()
 
         while state == Game.play:
             for event in pygame.event.get():
@@ -126,10 +114,10 @@ class Main:
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     state = Game.menu
                 elif event.type:
-                    self.ctrl.firstRound()
-                    keep_playing = self.ctrl.playOneRound()
-                    if keep_playing == False :
-                        #Player want to quit
+                    self.ctrl.first_round()
+                    keep_playing = self.ctrl.play_one_round()
+                    if not keep_playing:
+                        # Player want to quit
                         state = Game.menu
         print("gameLoop")
         return state

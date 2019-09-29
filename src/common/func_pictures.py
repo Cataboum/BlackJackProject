@@ -5,16 +5,16 @@ import pygame
 from src.common.config import ConfigPath
 
 
-def load_image(file):
+def load_image(filename):
     """
     Loads an image, prepares it for play
     """
 
-    file = os.path.join(ConfigPath.folder("pictures"), file)
+    filename = os.path.join(ConfigPath.folder("pictures"), filename)
     try:
-        surface = pygame.image.load(file)
+        surface = pygame.image.load(filename)
     except pygame.error:
-        error = "Could not load image \"%s\" %s" % (file, pygame.get_error())
+        error = f"Could not load image \"{filename}\" {pygame.get_error()}"
         raise SystemExit(error)
     return surface.convert_alpha()
 
