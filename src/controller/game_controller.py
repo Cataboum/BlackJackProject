@@ -36,7 +36,10 @@ class GameController:
         self.view_game = None
         self.player_wallet = 500
         self.deck = Deck()
+        # For loops purpose
         self.state = False
+        self.human = None
+        self.hand_idx = None
         # self.view_game = View_game(window, view_config)
 
     def game_launch(self):
@@ -57,7 +60,7 @@ class GameController:
         # ask the view to open a new window and ask the number of player
         number_of_player = 1
 
-        for i in range(number_of_player):
+        for _ in range(number_of_player):
             # ask the name of the player and create the Player
             name_of_player = "Jesus"
             self.add_human(Player(name_of_player, self.player_wallet))
@@ -144,16 +147,16 @@ class GameController:
         self.dealer.add_card(self.deck.getCard())
 
     def play_one_round(self):
-        for human in self.humans_list:
-            print(str(human) + " round")
-            for hand_idx in range(len(human.hands)):
-                print("Hand %i" % hand_idx)
-                print(human.name + " is playing.")
+        for self.human in self.humans_list:
+            print(str(self.human) + " round")
+            for self.hand_idx in range(len(self.human.hands)):
+                print("Hand %i" % self.hand_idx)
+                print(self.human.name + " is playing.")
                 # Get list of possible actions
                 # Manage interfaces
                 # Let human choose
-                state = True
-                while state:
+                self.state = True
+                while self.state:
                     event = pygame.event.wait()
                     if event.type == QUIT:
                         return False
@@ -162,40 +165,18 @@ class GameController:
                             return False
 
                         elif event.key in [K_1, K_KP1]:
-                            print(1)
-                            card = self.deck.getCard()
-                            human.add_card(card, hand_idx)
-                            print("You : " + str(human.hands[hand_idx].hand))
-                            if human.hands[hand_idx].hand.is_burnt or human.hands[hand_idx].hand.is_black_jack:
-                                print("Is burnt or black jack")
-                                state = False
-
+                            self.view_game.buttons["card"].execute()
                         elif event.key in [K_2, K_KP2]:
-                            print(2)
-                            bet_amount = 5
-                            hand_id = 0
-                            if len(human.hands) >= 2:
-                                print("You have %i hands" % len(human.hands))
-                                hand_id = input("Hand number for bet : ")
-                            human.bet(int(bet_amount), int(hand_id))
-
+                            self.view_game.buttons["bet"].execute()
                         elif event.key in [K_3, K_KP3]:
-                            print(3)
-                            state = False
-
+                            self.view_game.buttons["end_turn"].execute()
                         elif event.key in [K_4, K_KP4]:
-                            print(4)
-                            hand_id = 0
-                            if len(human.hands) >= 2:
-                                print("You have %i hands" % len(human.hands))
-                                hand_id = input("Hand number for bet : ")
-                            human.split(hand_id)
-
+                            self.view_game.buttons["split"].execute()
                         elif event.key in [K_5, K_KP5]:
-                            print(5)
-                            human.double(0)
-
+                            self.view_game.buttons["double"].execute()
                         elif event.key in [K_6, K_KP6]:
+                            self.view_game.buttons["quit"].execute()
+                            # TODO: find a way to use the button instead of the return
                             return False
 
                     elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -242,6 +223,13 @@ class GameController:
         Manage actions on card button
         """
 
+        card = self.deck.getCard()
+        self.human.add_card(card, self.hand_idx)
+        print("You : " + str(self.human.hands[self.hand_idx].hand))
+        if self.human.hands[self.hand_idx].hand.is_burnt or self.human.hands[self.hand_idx].hand.is_black_jack:
+            print("Is burnt or black jack")
+            self.state = False
+
         print("btn_card")
         self.view_game.buttons["card"].set(state="disabled")
         self.view_game.buttons["card"].draw()
@@ -251,12 +239,21 @@ class GameController:
         Manage actions on bet button
         """
 
+        bet_amount = 5
+        hand_id = 0
+        if len(self.human.hands) >= 2:
+            print("You have %i hands" % len(self.human.hands))
+            hand_id = input("Hand number for bet : ")
+        self.human.bet(int(bet_amount), int(hand_id))
+
         print("btn_bet")
 
     def btn_end_turn(self):
         """
         Manage actions on end turn button
         """
+
+        self.state = False
 
         print("btn_end_turn")
 
@@ -265,12 +262,20 @@ class GameController:
         Manage actions on split button
         """
 
+        hand_id = 0
+        if len(self.human.hands) >= 2:
+            print("You have %i hands" % len(self.human.hands))
+            hand_id = input("Hand number for bet : ")
+        self.human.split(hand_id)
+
         print("btn_split")
 
     def btn_double(self):
         """
         Manage actions on double button
         """
+
+        self.human.double(0)
 
         print("btn_double")
 

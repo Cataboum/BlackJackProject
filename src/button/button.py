@@ -157,6 +157,15 @@ class Button:
     # = Public methods
     # =========================================================================
 
+    def execute(self, *args, **kwargs):
+        """
+        Emit the signal if the button is not disabled
+        """
+
+        if self.state != State.disabled:
+            print(*args)
+            self.signal.emit(*args, **kwargs)
+
     def collide(self, pos):
         """
         Return True if the position is on the button
