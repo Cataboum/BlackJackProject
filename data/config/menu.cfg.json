@@ -5,16 +5,39 @@
     },
     "menu_buttons": {
         "play_btn": {
+            "text": "Start (s)",
             "x": 300,
-            "y": 200
+            "y": 200,
+            "width": 200,
+            "height": 50
         },
         "option_btn": {
+            "text": "Options (o)",
             "x": 300,
-            "y": 300
+            "y": 300,
+            "width": 200,
+            "height": 50
         },
         "quit_btn": {
+            "text": "Quit (Esc)",
             "x": 300,
-            "y": 400
+            "y": 400,
+            "width": 200,
+            "height": 50
+        }
+    },
+    "menu_buttons_format": {
+        "default": {
+            "text_color": [0, 0, 0],
+            "bd": 0,
+            "bd_color": [255, 255, 255],
+            "bg": null
+        },
+        "selected": {
+            "text_color": [255, 255, 255],
+            "bd": 2,
+            "bd_color": [255, 255, 255],
+            "bg": [0, 170, 140]
         }
     }
 }

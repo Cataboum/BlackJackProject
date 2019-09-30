@@ -79,14 +79,12 @@ class Main:
         The mainloop the launch the game
         """
 
-        state, param = view_menu.main(
-            self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
+        state, param = view_menu.main(self.menu_window, CONFIG_MENU)
 
         while state != Game.quit:
             if state == Game.menu:
                 self.ctrl.reset_all_humans()
-                state, param = view_menu.main(
-                    self.menu_window, CONFIG_MENU["window"], CONFIG_MENU["menu_buttons"])
+                state, param = view_menu.main(self.menu_window, CONFIG_MENU)
             elif state == Game.play:
                 self.ctrl.game_launch()
                 state = self.game_loop()

@@ -10,16 +10,18 @@ from src.common.func_pictures import load_image
 from src.button import Button
 
 # TODO: Use a class instead of a function
-def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
+def main(window: pygame.Surface, menu_config: dict):
     """ The main function of the view of menu"""
 
     # Init window
-    screen = window
     state = Game.menu
+    win_config = menu_config["window"]
+    menu_buttons = menu_config["menu_buttons"]
+    buttons_format = menu_config["menu_buttons_format"]
 
     # Load background image
     bgd_tile = load_image("green_carpet.jpeg")
-    background = pygame.Surface((menu_config["width"], menu_config["height"]))
+    background = pygame.Surface((win_config["width"], win_config["height"]))
     background.blit(bgd_tile, (0, 0))
 
     # Prepare text
@@ -28,18 +30,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
 
     # Buttons
     btn_index = 0
-    default_btn_format = {
-        'text_color': (0, 0, 0),
-        'bd': 0,
-        'bd_color': (255, 255, 255),
-        'bg': None
-    }
-    selected_btn_format = {
-        'text_color': (255, 255, 255),
-        'bd': 2,
-        'bd_color': (255, 255, 255),
-        'bg': (0, 170, 140)
-    }
+    default_btn_format = buttons_format["default"]
+    selected_btn_format = buttons_format["selected"]
 
     def update_button_display(btn_index: int, btns_list: List[Button]):
         # Update button view according btn_index
@@ -48,8 +40,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         btns_list[btn_index].set(**selected_btn_format)
 
         # Update buttons display
-        screen.blit(background, (0, 0))
-        screen.blit(title_text, (80, 30))
+        window.blit(background, (0, 0))
+        window.blit(title_text, (80, 30))
         for btn in btns_list:
             btn.draw()
         pygame.display.flip()
@@ -76,17 +68,17 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         state = Game.quit
     
     disp = (
-        ("play_btn", "Start (s)", cmd_play_btn),
-        ("option_btn", "Options (o)", cmd_option_btn),
-        ("quit_btn", "Quit (Esc)", cmd_quit_btn)
+        ("play_btn", cmd_play_btn),
+        ("option_btn", cmd_option_btn),
+        ("quit_btn", cmd_quit_btn)
     )
     btns_list = list()
-    for iid, text, cmd in disp:
+    for iid, cmd in disp:
         b = Button(
             window=window,
-            text=text,
+            text=menu_buttons[iid]["text"],
             pos=(menu_buttons[iid]["x"], menu_buttons[iid]["y"]),
-            size=(200, 50)
+            size=(menu_buttons[iid]["width"], menu_buttons[iid]["height"])
         )
         b.signal.attach(cmd)
         btns_list.append(b)
@@ -94,8 +86,8 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     update_button_display(btn_index, btns_list)
 
     # Display on windows
-    screen.blit(background, (0, 0))
-    screen.blit(title_text, (80, 30))
+    window.blit(background, (0, 0))
+    window.blit(title_text, (80, 30))
     for btn in btns_list:
         btn.draw()
 
@@ -108,7 +100,7 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
     while state == Game.menu:
 
         # Clear all the sprites
-        all_sprites.clear(screen, bgd_tile)
+        all_sprites.clear(window, bgd_tile)
         all_sprites.update()
 
         # Check for events
@@ -133,7 +125,7 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
                 btn.handle_event(event)
 
         # Update the scene
-        dirty = all_sprites.draw(screen)
+        dirty = all_sprites.draw(window)
         pygame.display.update(dirty)
 
         clock.tick(40)
