@@ -34,6 +34,7 @@ class Button:
     :param 3-tuple bg_normal: color for normal background
     :param 3-tuple bg_hover: color for background when hover
     :param 3-tuple bg_pressed: color for background when pressed
+    :param 3-tuple bg: color for all the backgrouds
     :param int bd: border size
     :param 3-tuple bd_color: color for the border
     :param str text: text to display on button
@@ -73,6 +74,7 @@ class Button:
         :param 3-tuple bg_normal: color for normal background
         :param 3-tuple bg_hover: color for background when hover
         :param 3-tuple bg_pressed: color for background when pressed
+        :param 3-tuple bg: color for all the backgrouds
         :param int bd: border size
         :param 3-tuple bd_color: color for the border
         :param str text: text to display on button
@@ -86,14 +88,13 @@ class Button:
             "bg_normal", "bg_hover", "bg_pressed",
             "bd", "bd_color",
             "text", "text_font", "text_color",
-            "pos", "size", "state"
+            "pos", "size", "state", "bg"
         ]
         for kwarg in kwargs:
             if kwarg not in attr:
                 raise ValueError(f"{kwarg} is not a valid attribute")
 
-        # If a parameter has changed
-        # Update rect
+        # Special parameters
         if "pos" in kwargs:
             self.rect.x, self.rect.y = kwargs.pop("pos")
         if "size" in kwargs:
@@ -104,11 +105,18 @@ class Button:
                 self.state = State.disabled
             elif state == "enabled":
                 self.state = State.normal
+        if "bg" in kwargs:
+            bg = kwargs.pop("bg")
+            self.bg_normal = bg
+            self.bg_hover = bg
+            self.bg_pressed = bg
 
         self.__dict__.update(**kwargs)
         # Update text_core
         if "text_font" in kwargs:
             self.text_core = pygame.font.Font(**self.text_font)
+            
+        
     
     # =========================================================================
     # = Events
@@ -163,6 +171,7 @@ class Button:
         :param 3-tuple bg_normal: color for normal background
         :param 3-tuple bg_hover: color for background when hover
         :param 3-tuple bg_pressed: color for background when pressed
+        :param 3-tuple bg: color for all the backgrouds
         :param int bd: border size
         :param 3-tuple bd_color: color for the border
         :param str text: text to display on button

@@ -32,13 +32,13 @@ def main(window: pygame.Surface, menu_config: dict, menu_buttons: dict):
         'text_color': (0, 0, 0),
         'bd': 0,
         'bd_color': (255, 255, 255),
-        'bg_normal': None
+        'bg': None
     }
     selected_btn_format = {
         'text_color': (255, 255, 255),
         'bd': 2,
         'bd_color': (255, 255, 255),
-        'bg_normal': (0, 170, 140)
+        'bg': (0, 170, 140)
     }
 
     def update_button_display(btn_index: int, btns_list: List[Button]):
