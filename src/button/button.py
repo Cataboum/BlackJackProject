@@ -34,7 +34,7 @@ class Button:
     :param 3-tuple bg_normal: color for normal background
     :param 3-tuple bg_hover: color for background when hover
     :param 3-tuple bg_pressed: color for background when pressed
-    :param 3-tuple bg: color for all the backgrouds
+    :param 3-tuple bg: color for all the backgrounds
     :param int bd: border size
     :param 3-tuple bd_color: color for the border
     :param str text: text to display on button
@@ -74,7 +74,7 @@ class Button:
         :param 3-tuple bg_normal: color for normal background
         :param 3-tuple bg_hover: color for background when hover
         :param 3-tuple bg_pressed: color for background when pressed
-        :param 3-tuple bg: color for all the backgrouds
+        :param 3-tuple bg: color for all the backgrounds
         :param int bd: border size
         :param 3-tuple bd_color: color for the border
         :param str text: text to display on button
@@ -115,13 +115,11 @@ class Button:
         # Update text_core
         if "text_font" in kwargs:
             self.text_core = pygame.font.Font(**self.text_font)
-            
-        
-    
+
     # =========================================================================
     # = Events
     # =========================================================================
-    
+
     def __on_clic_down(self):
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(*pos):
@@ -171,7 +169,7 @@ class Button:
         :param 3-tuple bg_normal: color for normal background
         :param 3-tuple bg_hover: color for background when hover
         :param 3-tuple bg_pressed: color for background when pressed
-        :param 3-tuple bg: color for all the backgrouds
+        :param 3-tuple bg: color for all the backgrounds
         :param int bd: border size
         :param 3-tuple bd_color: color for the border
         :param str text: text to display on button
