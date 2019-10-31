@@ -1,0 +1,20 @@
+{
+    "window": {
+        "width": 1200,
+        "height": 700
+    },
+    "menu_buttons": {
+        "play_btn": {
+            "x": 300,
+            "y": 200
+        },
+        "option_btn": {
+            "x": 300,
+            "y": 300
+        },
+        "quit_btn": {
+            "x": 300,
+            "y": 400
+        }
+    }
+}

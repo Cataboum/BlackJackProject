@@ -1,0 +1,88 @@
+{
+    "window": {
+        "x": 0,
+        "y": 0,
+        "width": 1200,
+        "height": 700
+    },
+    "game_buttons": {
+        "card": {
+            "text": "(1) Card",
+            "pos": [40, 610],
+            "size": [120, 74],
+            "bg_normal": [30, 193, 130],
+            "bg_hover": [40, 200, 150],
+            "bg_pressed": [30, 135, 90]
+        },
+        "bet": {
+            "text": "(2) Bet",
+            "pos": [240, 610],
+            "size": [120, 74],
+            "bg_normal": [30, 193, 130],
+            "bg_hover": [40, 200, 150],
+            "bg_pressed": [30, 135, 90]
+        },
+        "end_turn": {
+            "text": "(3) End Turn",
+            "pos": [440, 610],
+            "size": [120, 74],
+            "bg_normal": [30, 193, 130],
+            "bg_hover": [40, 200, 150],
+            "bg_pressed": [30, 135, 90]
+        },
+        "split": {
+            "text": "(4) Split",
+            "pos": [640, 610],
+            "size": [120, 74],
+            "bg_normal": [30, 193, 130],
+            "bg_hover": [40, 200, 150],
+            "bg_pressed": [30, 135, 90]
+        },
+        "double": {
+            "text": "(5) Double",
+            "pos": [840, 610],
+            "size": [120, 74],
+            "bg_normal": [30, 193, 130],
+            "bg_hover": [40, 200, 150],
+            "bg_pressed": [30, 135, 90]
+        },
+        "quit": {
+            "text": "(6) Quit",
+            "pos": [1040, 610],
+            "size": [120, 74],
+            "bg_normal": [193, 130, 30],
+            "bg_hover": [200, 150, 40],
+            "bg_pressed": [135, 90, 30]
+        }
+    },
+    "game_menu_area": {
+        "x": 0,
+        "y": 600,
+        "width": 1200,
+        "height": 100,
+        "color": [50, 50, 50]
+    },
+    "card_areas": {
+        "extra_card_offset": {
+            "x": 15,
+            "y": 15
+        },
+        "dealer": {
+            "x": 550,
+            "y": 50
+        },
+        "player": {
+            "x": 200,
+            "y": 450,
+            "width": 700
+        }
+    },
+    "cards": {
+        "height": 150,
+        "width": 100
+    },
+    "tokens": {
+        "height": 50,
+        "width": 50
+    }
+}

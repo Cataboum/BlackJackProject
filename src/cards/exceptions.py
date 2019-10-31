@@ -1,0 +1,2 @@
+class CardsAPIError(Exception):
+    pass

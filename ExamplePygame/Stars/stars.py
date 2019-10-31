@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This example is based on an official example.
 It is located on the local directory of pygame:
@@ -50,7 +48,7 @@ def load_image(file):
 
 class Star(pygame.sprite.Sprite):
     """
-    A shouting star
+    A shooting star
     """
 
     speed = 2

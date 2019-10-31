@@ -1,0 +1,15 @@
+{
+    "folders": {
+        "main": ["."],
+        "data": ["data"],
+        "config": ["data", "config"],
+        "pictures": ["data", "pictures"],
+        "cards": ["data", "pictures", "cards"],
+        "cards_svg": ["data", "pictures", "cards_svg"],
+        "tokens": ["data", "pictures", "tokens"],
+        "src": ["src"]
+    },
+    "files": {
+        "tokens": ["config", "tokens.cfg.json"]
+    }
+}

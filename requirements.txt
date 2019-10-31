@@ -1,0 +1,7 @@
+dataclasses==0.6
+marshmallow==2.19.5
+pygame==1.9.4
+typing==3.6.6
+python_coveralls>=2
+pytest-cov>=2
+coverage>4
