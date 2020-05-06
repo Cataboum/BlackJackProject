@@ -36,10 +36,12 @@ class Deck:
         self.needs_shuffling = False
 
     def getCard(self) -> Card:
+        print("[Deck::getCard()]")
         self.top_card_index += 1
         if self.top_card_index == self.red_card_index:
             # The deck needs to be shuffled
             self.needs_shuffling = True
+            print("[Deck::getCard()] -> deck need to be shuffled")
 
         return Card(*self.cards[self.top_card_index])
 

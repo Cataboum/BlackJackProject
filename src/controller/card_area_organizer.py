@@ -37,13 +37,13 @@ class CardAreaOrganizer:
         :param Card card: the card we want to add to the organizer
         :param str human_type: either "dealer" or "player"
         :param int area_id: only for "player" human_type, specifies the id
-        of the area to add the card to
+        of the area to add the card to is linked to the hand of the player
         :return: None
         """
         card_tile = self._create_card_tile(card)
-        if human_type == "dealer":
+        if human_type.lower() == "dealer":
             self._add_dealer_card(card_tile)
-        elif human_type == "player":
+        elif human_type.lower() == "player":
             if area_id is None:
                 raise ValueError("Missing area_id for adding a player card")
             elif area_id > len(self.player_areas):

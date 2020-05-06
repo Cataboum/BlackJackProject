@@ -1,6 +1,6 @@
 from src.cards.card import Card
 from src.common.game_view_config import game_view_config
-from src.views.card_area_organizer import CardAreaOrganizer
+from src.controller.card_area_organizer import CardAreaOrganizer
 
 # override method so we don't have to initialize a pygame window
 CardAreaOrganizer._create_card_tile = lambda _, __: None
